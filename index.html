@@ -3,72 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.24.9 - Sync & Transfer Edition</title>
+    <title>Solar Pro V.24.9.1 - Sync Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <style> 
-        body { font-family: 'Prompt', sans-serif; background-color: #f1f5f9; color: #1e293b; } 
+    <style>
+        body { font-family: 'Prompt', sans-serif; background: #f1f5f9; color: #1e293b; }
         .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; display: flex; justify-content: center; align-items: center; }
-        .drag-handle { cursor: grab; user-select: none; }
-        .drag-handle:active { cursor: grabbing; }
-        .display-only { display: none; }
-        .is-rendering .display-only { display: block !important; }
-        .is-rendering .input-only { display: none !important; }
-        .is-rendering .no-render { display: none !important; }
+        .drag-handle { cursor: grab; } .drag-handle:active { cursor: grabbing; }
+        .display-only { display: none; } .is-rendering .display-only { display: block !important; }
+        .is-rendering .input-only, .is-rendering .no-render { display: none !important; }
         input { text-align: inherit; font-family: inherit; }
-        @media print { .no-print { display: none !important; } body { background-color: white; padding: 0; } #full-report-area { border: none !important; background: white !important; padding: 0 !important; } }
+        @media print { .no-print { display: none !important; } #full-report-area { background: white !important; padding: 0 !important; border: none !important; } }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div id="app" class="max-w-6xl mx-auto space-y-6 pb-20">
-        
         <div class="flex justify-between items-center no-print">
             <div class="flex flex-col">
-                <h1 class="text-xl font-black text-indigo-700 uppercase italic tracking-tighter">Solar Pro V.24.9</h1>
-                <span class="text-[9px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest mx-auto">Sync & Data Transfer Locked</span>
+                <h1 class="text-xl font-black text-indigo-700 italic tracking-tighter">Solar Pro V.24.9.1</h1>
+                <span class="text-[9px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit">Master Sync & Capture</span>
             </div>
             <div class="flex gap-2">
-                <button @click="saveAsImage" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg flex items-center gap-2 transition-all active:scale-95">
-                    <span>💾</span> SAVE IMAGE
-                </button>
-                <button @click="handlePrint" class="bg-slate-700 hover:bg-slate-800 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg flex items-center gap-2">
-                    <span>🖨️</span> PDF / PRINT
-                </button>
+                <button @click="saveAsImage" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95">💾 SAVE IMAGE</button>
+                <button @click="handlePrint" class="bg-slate-700 hover:bg-slate-800 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg">🖨️ PRINT</button>
             </div>
         </div>
 
         <div id="full-report-area" :class="{'is-rendering': isRendering}" class="p-8 space-y-6 bg-slate-100 rounded-[40px] border border-slate-200">
-            
             <div class="bg-white rounded-3xl shadow-xl p-8 border-t-8 border-slate-900">
-                <div class="flex justify-between items-center mb-6 no-print border-b pb-2">
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest italic">Step 1: System Comparison</h2>
-                    <button @click="addOption" class="bg-indigo-100 text-indigo-600 text-[10px] font-black px-4 py-2 rounded-full hover:bg-indigo-200">+ ADD OPTION</button>
+                <div class="flex justify-between items-center mb-6 no-print border-b pb-2 text-[10px] font-black uppercase text-slate-400">
+                    <span>Step 1: System Options</span>
+                    <button @click="addOption" class="text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">+ ADD OPTION</button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative shadow-sm text-center">
-                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print shadow-md font-black">✕</button>
+                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border relative shadow-sm text-center">
+                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print">✕</button>
                         <div class="mb-4">
                             <span class="display-only text-xs font-black text-indigo-700 uppercase">{{ opt.title || 'OPTION ' + (idx+1) }}</span>
-                            <input v-model="opt.title" class="input-only w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b-2 border-dashed border-indigo-100 focus:outline-none focus:border-indigo-500 pb-1" placeholder="ตั้งชื่อ OPTION">
+                            <input v-model="opt.title" class="input-only w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b-2 border-dashed border-indigo-100 focus:outline-none focus:border-indigo-500 pb-1" placeholder="ชื่อ OPTION">
                         </div>
                         <div class="space-y-3 font-bold">
-                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
-                                <label class="text-[9px] font-bold uppercase text-slate-400">Solar (kW)</label>
-                                <span class="display-only text-indigo-600 font-black">{{ opt.solarKw }} kW</span>
-                                <input type="number" v-model="opt.solarKw" class="input-only w-16 text-right text-indigo-600 bg-transparent focus:outline-none font-black">
+                            <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-100">
+                                <label class="text-[9px] text-slate-400">Solar (kW)</label>
+                                <span class="display-only text-indigo-600">{{ opt.solarKw }} kW</span>
+                                <input type="number" v-model="opt.solarKw" class="input-only w-16 text-right text-indigo-600 bg-transparent focus:outline-none">
                             </div>
-                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
-                                <label class="text-[9px] font-bold uppercase text-slate-400">Batt (kWh)</label>
-                                <span class="display-only text-purple-600 font-black">{{ opt.batteryKwh }} kWh</span>
-                                <input type="number" v-model="opt.batteryKwh" class="input-only w-16 text-right text-purple-600 bg-transparent focus:outline-none font-black">
+                            <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-100">
+                                <label class="text-[9px] text-slate-400">Batt (kWh)</label>
+                                <span class="display-only text-purple-600">{{ opt.batteryKwh }} kWh</span>
+                                <input type="number" v-model="opt.batteryKwh" class="input-only w-16 text-right text-purple-600 bg-transparent focus:outline-none">
                             </div>
-                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
-                                <label class="text-[9px] font-bold uppercase text-slate-400">Budget (฿)</label>
-                                <span class="display-only text-emerald-600 font-black">฿{{ formatNumber(opt.cost) }}</span>
-                                <input type="number" v-model="opt.cost" class="input-only w-24 text-right text-emerald-600 bg-transparent focus:outline-none font-black">
+                            <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-100">
+                                <label class="text-[9px] text-slate-400">Budget (฿)</label>
+                                <span class="display-only text-emerald-600">฿{{ formatNumber(opt.cost) }}</span>
+                                <input type="number" v-model="opt.cost" class="input-only w-24 text-right text-emerald-600 bg-transparent focus:outline-none">
                             </div>
                         </div>
                     </div>
@@ -76,7 +67,7 @@
             </div>
 
             <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white">
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-3 italic">Monthly Gross Consumption (ก่อนติดตั้ง)</p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic mb-3">Monthly Gross Consumption (ก่อนติดตั้ง)</p>
                 <div class="flex justify-center items-baseline gap-2">
                     <span class="text-6xl font-black italic">฿{{ formatNumber(totalGrossCost) }}</span>
                     <span class="text-slate-500 font-bold uppercase text-sm">/ เดือน</span>
@@ -111,7 +102,7 @@
                         <tr v-for="item in appliances" :key="item.id">
                             <td class="p-5 font-bold text-slate-700">
                                 {{ item.name }} 
-                                <span v-if="item.isPeakSync" class="ml-1 text-[9px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase italic tracking-tighter">✨ PEAK</span>
+                                <span v-if="item.isPeakSync" class="ml-1 text-[9px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase italic">✨ PEAK</span>
                                 <span v-if="item.time !== 'night' && isOverload(item)" class="ml-1 text-[9px] text-orange-500 font-bold uppercase italic px-1 rounded border border-orange-100">⚠️ Overload</span>
                             </td>
                             <td class="p-5 text-center font-bold">{{ formatNumber(item.power) }} <span class="text-[8px] text-slate-400 uppercase font-normal">{{ item.type.includes('ac') ? 'BTU' : 'W' }}</span></td>
@@ -121,62 +112,61 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="p-8 bg-slate-50 text-[11px] text-slate-600 space-y-4 border-t border-slate-100 leading-relaxed">
-                    <h3 class="font-black text-indigo-700 uppercase tracking-[0.2em] border-b pb-2 text-center text-sm font-black">☀️ SOLAR PRO INSIGHTS & LOGIC DISCLOSURE</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-justify">
-                        <div class="space-y-2"><p class="font-bold text-slate-800 uppercase text-[10px]">📌 1. ความแม่นยำและการหักลบไฟเกิน (Overload)</p><p>ระบบนี้หักลบไฟส่วนเกินที่แผงผลิตไม่ทันออกรายวินาที เช่น หากชาร์จรถ EV 6.7kW บนแผง 5kW ระบบจะคำนวณส่วนต่าง 2.2kW เป็นไฟที่ต้องซื้อจากการไฟฟ้าเสมอ</p></div>
-                        <div class="space-y-2"><p class="font-bold text-slate-800 uppercase text-[10px]">📌 2. การสูญเสียในระบบและการระบายความร้อน</p><p>เผื่อค่าการสูญเสียพลังงาน (System Loss) ไว้ที่ 10% เพื่อครอบคลุมทั้งประสิทธิภาพของ Inverter และความร้อนที่ลดทอนกำลังผลิตของแผงในสภาพอากาศเมืองไทย</p></div>
+                <div class="p-8 bg-slate-50 text-[11px] text-slate-600 border-t leading-relaxed">
+                    <h3 class="font-black text-indigo-700 text-center text-sm mb-4">☀️ SOLAR PRO INSIGHTS & LOGIC DISCLOSURE</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                        <div class="space-y-1"><p class="font-bold text-slate-800 uppercase text-[10px]">📌 1. หักลบไฟเกิน (Overload)</p><p>คำนวณแบบ Engineering Logic หักลบส่วนเกินรายวินาที แผงผลิตไม่ทันต้องซื้อการไฟฟ้าเพิ่มเสมอ</p></div>
+                        <div class="space-y-1"><p class="font-bold text-slate-800 uppercase text-[10px]">📌 2. System Loss 10%</p><p>เผื่อค่าความร้อนและประสิทธิภาพ Inverter เพื่อให้ตัวเลขสอดคล้องกับหน้างานจริงเมืองไทย</p></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 no-print space-y-4">
+        <div class="bg-white rounded-3xl p-6 shadow-md border no-print space-y-4">
             <div class="flex justify-between items-center border-b pb-4">
-                <h3 class="font-bold text-xs text-slate-400 tracking-[0.2em] uppercase italic text-blue-600 flex items-center gap-2">🛠️ Configurator</h3>
+                <h3 class="font-bold text-xs text-blue-600 uppercase italic">🛠️ Configurator</h3>
                 <div class="flex gap-4 items-center">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">Rate:</span>
-                    <input type="number" v-model="rate" step="0.01" class="w-16 border rounded p-1 text-center font-bold text-blue-600 bg-white">
-                    <button @click="addAppliance" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-xs font-bold shadow-md">+ ADD ITEM</button>
+                    <span class="text-[10px] font-bold text-slate-400">Rate:</span>
+                    <input type="number" v-model="rate" step="0.01" class="w-16 border rounded p-1 text-center font-bold text-blue-600">
+                    <button @click="addAppliance" class="bg-blue-600 text-white px-5 py-2 rounded-lg text-xs font-bold shadow-md">+ ADD ITEM</button>
                 </div>
             </div>
-
             <div id="appliance-list" class="space-y-3">
-                <div v-for="(item, index) in appliances" :key="item.id" class="flex flex-wrap md:flex-nowrap gap-3 items-center bg-slate-50 p-3 rounded-2xl text-[11px] border border-slate-100 transition-all hover:border-indigo-200 group">
+                <div v-for="(item, index) in appliances" :key="item.id" class="flex flex-wrap md:flex-nowrap gap-3 items-center bg-slate-50 p-3 rounded-2xl text-[11px] border transition-all hover:border-indigo-200 group">
                     <div class="drag-handle p-2 text-slate-300 group-hover:text-indigo-400 text-lg">⠿</div>
-                    <input type="text" v-model="item.name" class="font-bold p-2 bg-white border border-slate-200 rounded-lg flex-1 min-w-[140px] font-bold">
+                    <input type="text" v-model="item.name" class="font-bold p-2 bg-white border rounded-lg flex-1 min-w-[140px]">
                     <div class="flex gap-2">
-                        <select v-model="item.time" class="p-2 border border-slate-200 rounded-lg bg-white w-24"><option value="day">☀️ Day</option><option value="night">🌙 Night</option><option value="all">🔄 All</option></select>
-                        <select v-model="item.type" class="p-2 border border-slate-200 rounded-lg bg-white w-32 font-bold"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="general">General</option></select>
+                        <select v-model="item.time" class="p-2 border rounded-lg bg-white w-24"><option value="day">☀️ Day</option><option value="night">🌙 Night</option><option value="all">🔄 All</option></select>
+                        <select v-model="item.type" class="p-2 border rounded-lg bg-white w-32 font-bold"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="general">General</option></select>
                     </div>
                     <div class="flex items-center gap-1">
-                        <input type="number" v-model="item.power" class="w-20 p-2 border border-slate-200 rounded-lg text-center font-bold bg-white focus:outline-none font-bold">
+                        <input type="number" v-model="item.power" class="w-20 p-2 border rounded-lg text-center font-bold bg-white focus:outline-none">
                         <button v-if="item.name.includes('จิปาถะ') || item.name.includes('เบ็ดเตล็ด')" @click="openMagicFill(index)" class="p-2 hover:bg-indigo-100 rounded-xl">🪄</button>
                     </div>
-                    <div class="flex items-center gap-1 bg-orange-50 px-3 py-2 rounded-lg border border-orange-100 h-[38px]"><input type="checkbox" v-model="item.isPeakSync" class="w-4 h-4"><label class="text-[9px] font-black text-orange-600 uppercase ml-1 font-bold">Peak Sync</label></div>
-                    <div class="flex items-center gap-1"><span class="text-slate-400 font-bold">H:</span><input type="number" v-model="item.hours" class="w-12 p-2 border border-slate-200 rounded-lg text-center font-bold text-blue-600 bg-white"></div>
-                    <div class="flex items-center gap-1"><span class="text-slate-400 font-bold">D:</span><input type="number" v-model="item.days" class="w-12 p-2 border border-slate-200 rounded-lg text-center font-bold text-emerald-600 bg-white"></div>
+                    <div class="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-lg border border-orange-100"><input type="checkbox" v-model="item.isPeakSync"><label class="text-[9px] font-black text-orange-600">Peak Sync</label></div>
+                    <div class="flex items-center gap-1 text-slate-400">H:<input type="number" v-model="item.hours" class="w-10 p-2 border rounded-lg text-center font-bold text-blue-600 bg-white"></div>
+                    <div class="flex items-center gap-1 text-slate-400">D:<input type="number" v-model="item.days" class="w-10 p-2 border rounded-lg text-center font-bold text-emerald-600 bg-white"></div>
                     <div class="flex gap-1 ml-auto text-lg items-center">
-                        <button @click="duplicateAppliance(item, index)" class="p-2 hover:bg-indigo-50 rounded-xl" title="Duplicate Item">📑</button>
-                        <button @click="removeAppliance(index)" class="p-2 hover:bg-red-50 rounded-xl" title="Delete Item">🗑️</button>
+                        <button @click="duplicateAppliance(item, index)" class="p-2 hover:bg-indigo-50 rounded-xl" title="Duplicate">📑</button>
+                        <button @click="removeAppliance(index)" class="p-2 hover:bg-red-50 rounded-xl" title="Delete">🗑️</button>
                     </div>
                 </div>
             </div>
-
-            <div class="flex flex-wrap gap-2 pt-4 border-t mt-4 no-print border-dashed">
-                <button @click="exportData" class="bg-slate-900 text-white text-[9px] font-black px-5 py-2.5 rounded-full hover:bg-indigo-600 transition-all flex items-center gap-2">📤 EXPORT DATA TO IPAD</button>
+            <div class="flex flex-wrap gap-2 pt-4 border-t mt-4 no-print border-dashed items-center">
+                <button @click="exportData" class="bg-slate-900 text-white text-[9px] font-black px-5 py-2.5 rounded-full hover:bg-indigo-600 flex items-center gap-2 transition-all">📤 EXPORT DATA TO IPAD</button>
                 <button @click="importData" class="bg-indigo-50 text-indigo-700 text-[9px] font-black px-5 py-2.5 rounded-full hover:bg-indigo-100 transition-all flex items-center gap-2">📥 IMPORT DATA</button>
-                <button @click="resetApp" class="text-[9px] text-slate-300 font-bold hover:text-red-500 uppercase ml-auto">⚠️ Reset All</button>
+                <span class="text-[8px] text-slate-300 ml-4">Use JSON file to sync between devices</span>
+                <button @click="resetApp" class="text-[9px] text-slate-300 font-bold hover:text-red-500 uppercase ml-auto">⚠️ Reset DB</button>
             </div>
         </div>
 
         <div v-if="showMagicPopup" class="popup-overlay no-print" @click.self="showMagicPopup = false">
-            <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full space-y-4 text-slate-800 text-center border-t-4 border-indigo-600">
-                <h4 class="font-bold text-indigo-700 italic text-lg">🪄 Magic Fill: Baseload</h4>
-                <div class="space-y-2 text-left text-center"><label class="text-[10px] font-bold text-slate-400 uppercase">Home Type</label><select v-model="houseType" class="w-full p-3 border rounded-xl text-sm bg-slate-50"><option value="small">Townhome</option><option value="medium">Detached</option><option value="large">Villa</option></select></div>
-                <div class="space-y-2 text-left text-center"><label class="text-[10px] font-bold text-slate-400 uppercase">Residents</label><select v-model="familySize" class="w-full p-3 border rounded-xl text-sm bg-slate-50"><option value="1-2">1-2 คน</option><option value="3-4">3-4 คน</option><option value="5+">5+ คน</option></select></div>
-                <div class="bg-indigo-50 p-4 rounded-2xl font-bold text-3xl text-indigo-600 italic font-black underline">{{ magicValue }} W</div>
-                <button @click="applyMagic" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg transition-transform active:scale-95 text-xs font-black uppercase tracking-widest">Apply Values 🪄</button>
+            <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full space-y-4 text-center border-t-4 border-indigo-600">
+                <h4 class="font-bold text-indigo-700 italic">🪄 Magic Fill: Baseload</h4>
+                <div class="space-y-2 text-left text-center"><label class="text-[10px] font-bold text-slate-400 uppercase">Home Type</label><select v-model="houseType" class="w-full p-3 border rounded-xl bg-slate-50"><option value="small">Townhome</option><option value="medium">Detached</option><option value="large">Villa</option></select></div>
+                <div class="space-y-2 text-left text-center"><label class="text-[10px] font-bold text-slate-400 uppercase">Residents</label><select v-model="familySize" class="w-full p-3 border rounded-xl bg-slate-50"><option value="1-2">1-2 คน</option><option value="3-4">3-4 คน</option><option value="5+">5+ คน</option></select></div>
+                <div class="bg-indigo-50 p-4 rounded-2xl font-black text-3xl text-indigo-600 italic underline">{{ magicValue }} W</div>
+                <button @click="applyMagic" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold uppercase tracking-widest active:scale-95 transition-all">Apply Values 🪄</button>
             </div>
         </div>
     </div>
@@ -184,110 +174,47 @@
     <script>
         const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
         const PERMANENT_STORAGE_KEY = 'SOLAR_PRO_PERMANENT_STORAGE';
-
         createApp({
             setup() {
                 const rate = ref(4.65); const isRendering = ref(false);
                 const options = ref([{ title: 'OPTION 1', solarKw: 5.0, batteryKwh: 0, cost: 180000 }, { title: 'OPTION 2', solarKw: 10.0, batteryKwh: 0, cost: 320000 }]);
-                const appliances = ref([]);
-                const showMagicPopup = ref(false); const houseType = ref('medium'); const familySize = ref('3-4'); const magicEditIndex = ref(null);
+                const appliances = ref([]); const showMagicPopup = ref(false); const houseType = ref('medium'); const familySize = ref('3-4'); const magicEditIndex = ref(null);
                 const genId = () => Math.random().toString(36).substr(2, 9) + Date.now();
-
-                const initSortable = () => {
-                    const el = document.getElementById('appliance-list');
-                    if (el) Sortable.create(el, { handle: '.drag-handle', ghostClass: 'sortable-ghost', onEnd: (evt) => {
-                        const list = [...appliances.value]; const item = list.splice(evt.oldIndex, 1)[0]; list.splice(evt.newIndex, 0, item); appliances.value = list;
-                    }});
-                };
-
+                const initSortable = () => { const el = document.getElementById('appliance-list'); if (el) Sortable.create(el, { handle: '.drag-handle', ghostClass: 'sortable-ghost', onEnd: (evt) => { const list = [...appliances.value]; const item = list.splice(evt.oldIndex, 1)[0]; list.splice(evt.newIndex, 0, item); appliances.value = list; }}); };
                 onMounted(() => {
                     const saved = localStorage.getItem(PERMANENT_STORAGE_KEY);
-                    if (saved) {
-                        try { const p = JSON.parse(saved); rate.value = p.rate || 4.65; options.value = p.options || options.value; appliances.value = p.appliances || []; } catch(e) { resetApp(); }
-                    } else {
-                        appliances.value = [
-                            { id: genId(), name: 'แอร์ห้องนอน 15k', type: 'ac_inverter', time: 'night', power: 15000, hours: 10, days: 30, isPeakSync: false },
-                            { id: genId(), name: 'รถ EV', type: 'ev', time: 'day', power: 6700, hours: 2, days: 12, isPeakSync: true },
-                            { id: genId(), name: 'ไฟจิปาถะ/เบ็ดเตล็ด', type: 'general', time: 'all', power: 800, hours: 12, days: 30, isPeakSync: false }
-                        ];
-                    }
+                    if (saved) { try { const p = JSON.parse(saved); rate.value = p.rate || 4.65; options.value = p.options || options.value; appliances.value = p.appliances || []; } catch(e) { resetApp(); } }
+                    else { appliances.value = [{ id: genId(), name: 'แอร์ห้องนอน 15k', type: 'ac_inverter', time: 'night', power: 15000, hours: 10, days: 30, isPeakSync: false }]; }
                     nextTick(() => initSortable());
                 });
-
                 watch([rate, options, appliances], () => { localStorage.setItem(PERMANENT_STORAGE_KEY, JSON.stringify({ rate: rate.value, options: options.value, appliances: appliances.value })); }, { deep: true });
-
                 const formatNumber = (n) => Math.round(n || 0).toLocaleString();
                 const getKwRaw = (i) => (i.type.includes('ac') ? i.power/15/1000 : i.power/1000);
-                const getSavePercent = (savings) => (totalGrossCost.value > 0 ? ((savings / totalGrossCost.value) * 100).toFixed(1) : 0);
-                const getItemGrossCost = (i) => {
-                    let kw = getKwRaw(i); let off = (i.type === 'ac_inverter' ? 0.6 : (i.type === 'fridge' ? 0.4 : (i.type === 'computer' ? 0.5 : 1.0)));
-                    return kw * i.hours * off * i.days * rate.value;
-                };
-
+                const getItemGrossCost = (i) => { let kw = getKwRaw(i); let off = (i.type === 'ac_inverter' ? 0.6 : (i.type === 'fridge' ? 0.4 : (i.type === 'computer' ? 0.5 : 1.0))); return kw * i.hours * off * i.days * rate.value; };
                 const totalGrossCost = computed(() => appliances.value.reduce((sum, i) => sum + getItemGrossCost(i), 0));
-
                 const calculateSavings = (opt) => {
                     let dKwh = 0; const peakCap = opt.solarKw * 0.9; const mSolar = opt.solarKw * 120;
-                    appliances.value.forEach(i => {
-                        const kw = getKwRaw(i); const fullUnitMonth = kw * i.hours * i.days;
-                        if (i.time === 'day' || i.time === 'all') {
-                            const ratio = (i.time === 'all' ? 0.55 : 1.0); const actualKwFromSolar = Math.min(kw, peakCap); 
-                            let bonus = (i.isPeakSync ? 1.2 : 0.8); dKwh += (fullUnitMonth * ratio) * (actualKwFromSolar / kw) * bonus;
-                        }
-                    });
-                    const ogS = Math.min(mSolar, dKwh);
-                    let batterySavingsUnits = 0; if (opt.batteryKwh > 0) {
-                        const remainingSolar = Math.max(0, mSolar - ogS); const nightNeeded = (totalGrossCost.value / rate.value) * 0.45;
-                        batterySavingsUnits = Math.min(remainingSolar, opt.batteryKwh * 30 * 0.85, nightNeeded);
-                    }
-                    return (ogS + batterySavingsUnits) * rate.value;
+                    appliances.value.forEach(i => { const kw = getKwRaw(i); if (i.time === 'day' || i.time === 'all') { const ratio = (i.time === 'all' ? 0.55 : 1.0); const actualKwFromSolar = Math.min(kw, peakCap); let bonus = (i.isPeakSync ? 1.2 : 0.8); dKwh += (kw * i.hours * i.days * ratio) * (actualKwFromSolar / kw) * bonus; }});
+                    const ogS = Math.min(mSolar, dKwh); let batS = 0; if (opt.batteryKwh > 0) { const remS = Math.max(0, mSolar - ogS); batS = Math.min(remS, opt.batteryKwh * 30 * 0.85, (totalGrossCost.value/rate.value)*0.45); }
+                    return (ogS + batS) * rate.value;
                 };
-
-                const magicValue = computed(() => {
-                    const b = houseType.value === 'small' ? 300 : houseType.value === 'medium' ? 600 : 1200;
-                    const f = familySize.value === '1-2' ? 100 : familySize.value === '3-4' ? 200 : 400;
-                    return b + f;
-                });
-
                 return {
-                    rate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, calculateSavings, getSavePercent,
-                    showMagicPopup, houseType, familySize, magicValue, isRendering,
-                    isOverload: (i) => getKwRaw(i) > (options.value[0].solarKw * 0.9),
-                    openMagicFill: (idx) => { magicEditIndex.value = idx; showMagicPopup.value = true; },
-                    applyMagic: () => { appliances.value[magicEditIndex.value].power = magicValue.value; appliances.value[magicEditIndex.value].hours = 12; showMagicPopup.value = false; },
+                    rate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, calculateSavings,
+                    isRendering, showMagicPopup, houseType, familySize, magicValue: computed(() => (houseType.value === 'small' ? 300 : houseType.value === 'medium' ? 600 : 1200) + (familySize.value === '1-2' ? 100 : familySize.value === '3-4' ? 200 : 400)),
+                    getSavePercent: (s) => (totalGrossCost.value > 0 ? ((s / totalGrossCost.value) * 100).toFixed(1) : 0),
                     calculatePayback: (opt) => { const s = calculateSavings(opt); return s > 0 ? (opt.cost / (s * 12)).toFixed(1) : '-'; },
                     addOption: () => options.value.push({ title: 'NEW OPTION', solarKw: 5, batteryKwh: 0, cost: 200000 }),
                     removeOption: (i) => options.value.splice(i, 1),
                     addAppliance: () => appliances.value.push({ id: genId(), name: 'รายการใหม่', type: 'general', time: 'all', power: 1000, hours: 1, days: 30, isPeakSync: false }),
-                    duplicateAppliance: (item, index) => {
-                        const copy = JSON.parse(JSON.stringify(item)); copy.id = genId(); copy.name += ' (Copy)'; appliances.value.splice(index + 1, 0, copy);
-                    },
+                    duplicateAppliance: (item, index) => { const copy = JSON.parse(JSON.stringify(item)); copy.id = genId(); copy.name += ' (Copy)'; appliances.value.splice(index + 1, 0, copy); },
                     removeAppliance: (i) => appliances.value.splice(i, 1),
+                    openMagicFill: (idx) => { magicEditIndex.value = idx; showMagicPopup.value = true; },
+                    applyMagic: () => { appliances.value[magicEditIndex.value].power = magicValue.value; appliances.value[magicEditIndex.value].hours = 12; showMagicPopup.value = false; },
                     handlePrint: () => { isRendering.value = true; nextTick(() => { window.print(); isRendering.value = false; }); },
-                    saveAsImage: () => { isRendering.value = true; nextTick(() => {
-                        html2canvas(document.getElementById('full-report-area'), { scale: 3, backgroundColor: '#f1f5f9' }).then(cv => { 
-                            const l=document.createElement('a'); l.download='SolarROI_Professional.jpg'; l.href=cv.toDataURL('image/jpeg'); l.click(); isRendering.value = false;
-                        }); 
-                    });},
-                    exportData: () => {
-                        const data = localStorage.getItem(PERMANENT_STORAGE_KEY);
-                        const blob = new Blob([data], {type: 'application/json'}); const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a'); link.href = url; link.download = `SolarPro_Backup_${new Date().toLocaleDateString()}.json`; link.click();
-                        alert('เซฟไฟล์สำรองเรียบร้อย! ส่งไฟล์นี้เข้า iPad แล้วกด Import ในแอปบน iPad ได้เลยครับ');
-                    },
-                    importData: () => {
-                        const input = document.createElement('input'); input.type = 'file';
-                        input.onchange = e => {
-                            const file = e.target.files[0]; const reader = new FileReader();
-                            reader.onload = event => {
-                                try { const imported = JSON.parse(event.target.result); if(confirm('ต้องการทับข้อมูลปัจจุบันด้วยข้อมูลที่นำเข้ามาใช่หรือไม่?')) {
-                                    localStorage.setItem(PERMANENT_STORAGE_KEY, event.target.result); location.reload();
-                                }} catch(e) { alert('ไฟล์ไม่ถูกต้องครับ'); }
-                            };
-                            reader.readAsText(file);
-                        }; input.click();
-                    },
-                    resetApp: () => { if(confirm('รีเซ็ตข้อมูลใหม่? ข้อมูลที่คุณกรอกไว้ทั้งหมดจะหายไป')) { localStorage.removeItem(PERMANENT_STORAGE_KEY); location.reload(); } }
+                    saveAsImage: () => { isRendering.value = true; nextTick(() => { html2canvas(document.getElementById('full-report-area'), { scale: 3, backgroundColor: '#f1f5f9' }).then(cv => { const l=document.createElement('a'); l.download='SolarROI_Master.jpg'; l.href=cv.toDataURL('image/jpeg'); l.click(); isRendering.value = false; }); }); },
+                    exportData: () => { const data = localStorage.getItem(PERMANENT_STORAGE_KEY); const blob = new Blob([data], {type: 'application/json'}); const url = URL.createObjectURL(blob); const l = document.createElement('a'); l.href = url; l.download = `SolarPro_Sync.json`; l.click(); alert('กู้ข้อมูลเสร็จ! ส่งไฟล์นี้ไป iPad แล้วกด IMPORT ได้เลยครับ'); },
+                    importData: () => { const input = document.createElement('input'); input.type = 'file'; input.onchange = e => { const f = e.target.files[0]; const r = new FileReader(); r.onload = ev => { try { JSON.parse(ev.target.result); if(confirm('ทับข้อมูลปัจจุบัน?')) { localStorage.setItem(PERMANENT_STORAGE_KEY, ev.target.result); location.reload(); } } catch(e) { alert('ไฟล์ผิดครับ'); } }; r.readAsText(f); }; input.click(); },
+                    resetApp: () => { if(confirm('รีเซ็ตทั้งหมด?')) { localStorage.removeItem(PERMANENT_STORAGE_KEY); location.reload(); } }
                 };
             }
         }).mount('#app');
