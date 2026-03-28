@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.24.9.3 - Emergency Rescue</title>
+    <title>Solar Pro V.24.9.5 - Professional Layout</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -15,6 +15,7 @@
         .drag-handle { cursor: grab; }
         .display-only { display: none; } .is-rendering .display-only { display: block !important; }
         .is-rendering .input-only, .is-rendering .no-render { display: none !important; }
+        input { text-align: inherit; font-family: inherit; }
         @media print { .no-print { display: none !important; } #full-report-area { background: white !important; padding: 0 !important; border: none !important; } }
     </style>
 </head>
@@ -22,57 +23,101 @@
     <div id="app" class="max-w-6xl mx-auto space-y-6 pb-20">
         
         <div class="flex justify-between items-center no-print">
-            <h1 class="text-xl font-black text-indigo-700 italic uppercase">Solar Pro V.24.9.3</h1>
+            <div class="flex flex-col">
+                <h1 class="text-xl font-black text-indigo-700 italic uppercase">Solar Pro V.24.9.5</h1>
+                <span class="text-[9px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit">Professional Layout & Data Sync</span>
+            </div>
             <div class="flex gap-2">
-                <button @click="saveAsImage" class="bg-indigo-600 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg">💾 SAVE IMAGE</button>
-                <button @click="handlePrint" class="bg-slate-700 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg">🖨️ PRINT</button>
+                <button @click="saveAsImage" class="bg-indigo-600 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
+                <button @click="handlePrint" class="bg-slate-700 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg flex items-center gap-2"><span>🖨️</span> PRINT</button>
             </div>
         </div>
 
         <div id="full-report-area" :class="{'is-rendering': isRendering}" class="p-8 space-y-6 bg-slate-100 rounded-[40px] border border-slate-200 shadow-inner">
+            
             <div class="bg-white rounded-3xl shadow-xl p-8 border-t-8 border-slate-900">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border relative text-center">
-                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print">✕</button>
-                        <input v-model="opt.title" class="input-only w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b border-dashed border-indigo-200 mb-4" placeholder="OPTION NAME">
-                        <span class="display-only font-black text-indigo-700 mb-4 block">{{ opt.title }}</span>
-                        <div class="space-y-2 text-[11px] font-bold">
-                            <div class="flex justify-between bg-white p-2 rounded-lg border"><span>Solar</span><input v-model="opt.solarKw" type="number" class="input-only w-16 text-right font-black text-indigo-600 bg-transparent focus:outline-none"><span class="display-only font-black">{{ opt.solarKw }} kW</span></div>
-                            <div class="flex justify-between bg-white p-2 rounded-lg border"><span>Batt</span><input v-model="opt.batteryKwh" type="number" class="input-only w-16 text-right font-black text-purple-600 bg-transparent focus:outline-none"><span class="display-only font-black">{{ opt.batteryKwh }} kWh</span></div>
-                            <div class="flex justify-between bg-white p-2 rounded-lg border"><span>Budget</span><input v-model="opt.cost" type="number" class="input-only w-24 text-right font-black text-emerald-600 bg-transparent focus:outline-none"><span class="display-only font-black">฿{{ formatNumber(opt.cost) }}</span></div>
+                <div class="flex justify-between items-center mb-6 no-print border-b pb-2">
+                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest italic italic">Step 1: System Options Comparison</h2>
+                    <button @click="addOption" class="bg-indigo-100 text-indigo-600 text-[10px] font-black px-4 py-2 rounded-full hover:bg-indigo-200 transition-colors">+ ADD OPTION</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative shadow-sm text-center">
+                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print shadow-md">✕</button>
+                        
+                        <div class="mb-4 space-y-1">
+                            <div class="input-only space-y-2">
+                                <input v-model="opt.title" class="w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b-2 border-dashed border-indigo-100 focus:outline-none focus:border-indigo-500 pb-1" placeholder="ชื่อ OPTION">
+                                <input v-model="opt.desc" class="w-full text-center text-[10px] font-bold text-slate-400 bg-transparent border-b border-dashed border-slate-200 focus:outline-none focus:border-slate-400 pb-1" placeholder="รายละเอียด (Inverter, แผง...)">
+                            </div>
+                            <div class="display-only">
+                                <span class="text-xs font-black text-indigo-700 uppercase block">{{ opt.title || 'OPTION ' + (idx+1) }}</span>
+                                <span class="text-[9px] font-bold text-slate-400 block mt-0.5 italic">{{ opt.desc }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
+                                <label class="text-[9px] font-bold uppercase text-slate-400">Solar (kW)</label>
+                                <span class="display-only font-black text-indigo-600">{{ opt.solarKw }} kW</span>
+                                <input type="number" v-model="opt.solarKw" class="input-only w-16 text-right font-black text-indigo-600 bg-transparent focus:outline-none">
+                            </div>
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
+                                <label class="text-[9px] font-bold uppercase text-slate-400">Batt (kWh)</label>
+                                <span class="display-only font-black text-purple-600">{{ opt.batteryKwh }} kWh</span>
+                                <input type="number" v-model="opt.batteryKwh" class="input-only w-16 text-right font-black text-purple-600 bg-transparent focus:outline-none">
+                            </div>
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
+                                <label class="text-[9px] font-bold uppercase text-slate-400">Budget (฿)</label>
+                                <span class="display-only font-black text-emerald-600">฿{{ formatNumber(opt.cost) }}</span>
+                                <input type="number" v-model="opt.cost" class="input-only w-24 text-right font-black text-emerald-600 bg-transparent focus:outline-none">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-slate-900 rounded-3xl p-10 text-center text-white border-b-8 border-indigo-600 shadow-2xl">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic mb-3">Monthly Gross Consumption (ก่อนติดตั้ง)</p>
+            </div>
+
+            <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-3 italic">Monthly Gross Consumption (ก่อนติดตั้ง)</p>
+                <div class="flex justify-center items-baseline gap-2">
                     <span class="text-6xl font-black italic">฿{{ formatNumber(totalGrossCost) }}</span>
+                    <span class="text-slate-500 font-bold uppercase text-sm">/ เดือน</span>
                 </div>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl p-8 overflow-x-auto">
                 <table class="w-full text-center border-collapse">
                     <thead>
-                        <tr class="text-[10px] text-slate-400 uppercase font-black border-b">
-                            <th class="p-4 text-left">Metric Analysis</th>
-                            <th v-for="opt in options" class="p-4 text-indigo-700 italic">{{ opt.title }}</th>
+                        <tr class="text-[10px] text-slate-400 uppercase font-black">
+                            <th class="p-4 text-left border-b w-1/4">Analysis Metrics</th>
+                            <th v-for="(opt, idx) in options" :key="idx" class="p-4 border-b bg-slate-50 rounded-t-2xl min-w-[140px] text-indigo-700 font-black">
+                                <div class="flex flex-col">
+                                    <span class="uppercase italic">{{ opt.title || 'Option ' + (idx + 1) }}</span>
+                                    <span class="text-[8px] text-slate-400 not-italic lowercase font-bold">{{ opt.desc }}</span>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
-                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 uppercase text-[10px]">ประหยัดต่อเดือน</td><td v-for="opt in options" class="p-5 font-black text-emerald-600 italic text-lg">฿{{ formatNumber(calculateSavings(opt)) }}</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 uppercase text-[10px]">คืนทุน (ปี)</td><td v-for="opt in options" class="p-5 font-black text-orange-500 italic text-lg">{{ calculatePayback(opt) }} ปี</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">ประหยัดต่อเดือน</td><td v-for="opt in options" class="p-5 font-black text-emerald-600 italic text-lg">฿{{ formatNumber(calculateSavings(opt)) }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">% ประหยัด</td><td v-for="opt in options" class="p-5 font-black text-blue-600 text-lg">{{ getSavePercent(calculateSavings(opt)) }}%</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">ยอดจ่ายสุทธิ</td><td v-for="opt in options" class="p-5 font-black text-slate-800 text-lg">฿{{ formatNumber(totalGrossCost - calculateSavings(opt)) }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">คืนทุน (ปี)</td><td v-for="opt in options" class="p-5 font-black text-orange-500 text-lg">{{ calculatePayback(opt) }} ปี</td></tr>
                     </tbody>
                 </table>
             </div>
-            
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border">
+
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black">
-                        <tr><th class="p-5">Appliance</th><th class="p-5 text-center">Spec</th><th class="p-5 text-center">Hrs.</th><th class="p-5 text-center">Days</th><th class="p-5 text-right font-bold">Cost/Mo.</th></tr>
+                        <tr><th class="p-5 font-bold">Appliance List</th><th class="p-5 text-center font-bold">Spec</th><th class="p-5 text-center font-bold">Hrs.</th><th class="p-5 text-center font-bold">Days</th><th class="p-5 text-right font-bold">Cost/Mo.</th></tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 border-b">
+                    <tbody class="divide-y divide-slate-100 border-b font-bold">
                         <tr v-for="item in appliances" :key="item.id">
-                            <td class="p-5 font-bold text-slate-700">{{ item.name }}</td>
-                            <td class="p-5 text-center font-bold">{{ formatNumber(item.power) }} <span class="text-[8px] text-slate-400">W</span></td>
+                            <td class="p-5 text-slate-700">
+                                {{ item.name }}
+                                <span v-if="item.isPeakSync" class="ml-1 text-[9px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase italic tracking-tighter">✨ PEAK</span>
+                            </td>
+                            <td class="p-5 text-center font-bold">{{ formatNumber(item.power) }} <span class="text-[8px] text-slate-400 uppercase">{{ item.type.includes('ac') ? 'BTU' : 'W' }}</span></td>
                             <td class="p-5 text-center font-bold">{{ item.hours }}</td>
                             <td class="p-5 text-center font-bold">{{ item.days }}</td>
                             <td class="p-5 text-right font-black italic">฿{{ formatNumber(getItemGrossCost(item)) }}</td>
@@ -82,27 +127,28 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 shadow-md border no-print space-y-4">
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 no-print space-y-4">
             <div class="flex justify-between items-center border-b pb-4">
                 <h3 class="font-bold text-xs text-blue-600 uppercase italic">🛠️ Configurator</h3>
                 <div class="flex gap-4 items-center">
-                    <span class="text-[10px] font-bold text-slate-400">Rate:</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Rate:</span>
                     <input type="number" v-model="rate" step="0.01" class="w-16 border rounded p-1 text-center font-bold text-blue-600 bg-white">
-                    <button @click="addAppliance" class="bg-blue-600 text-white px-5 py-2 rounded-lg text-xs font-bold shadow-md">+ ADD ITEM</button>
+                    <button @click="addAppliance" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-xs font-bold shadow-md">+ ADD ITEM</button>
                 </div>
             </div>
             <div id="appliance-list" class="space-y-3">
                 <div v-for="(item, index) in appliances" :key="item.id" class="flex flex-wrap md:flex-nowrap gap-3 items-center bg-slate-50 p-3 rounded-2xl text-[11px] border transition-all hover:border-indigo-200 group">
                     <div class="drag-handle p-2 text-slate-300 group-hover:text-indigo-400 text-lg">⠿</div>
-                    <input v-model="item.name" class="font-bold p-2 bg-white border rounded-lg flex-1 min-w-[140px]">
-                    <div class="flex gap-2">
-                        <input type="number" v-model="item.power" class="w-20 p-2 border rounded-lg text-center font-bold">
+                    <input type="text" v-model="item.name" class="font-bold p-2 bg-white border rounded-lg flex-1 min-w-[140px]">
+                    <div class="flex gap-2 text-center font-bold">
                         <select v-model="item.time" class="p-2 border rounded-lg bg-white w-24"><option value="day">☀️ Day</option><option value="night">🌙 Night</option><option value="all">🔄 All</option></select>
                         <select v-model="item.type" class="p-2 border rounded-lg bg-white w-32 font-bold"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="general">General</option></select>
                     </div>
-                    <div class="flex items-center gap-1">H:<input v-model="item.hours" type="number" class="w-12 p-2 border rounded-lg text-center font-bold text-blue-600"></div>
-                    <div class="flex items-center gap-1">D:<input v-model="item.days" type="number" class="w-12 p-2 border rounded-lg text-center font-bold text-emerald-600"></div>
-                    <div class="flex gap-1 ml-auto">
+                    <div class="flex items-center gap-1"><input type="number" v-model="item.power" class="w-20 p-2 border rounded-lg text-center font-bold bg-white focus:outline-none"><button v-if="item.name.includes('จิปาถะ') || item.name.includes('เบ็ดเตล็ด')" @click="openMagicFill(index)" class="p-2 hover:bg-indigo-100 rounded-xl">🪄</button></div>
+                    <div class="flex items-center gap-1 bg-orange-50 px-3 py-2 rounded-lg border border-orange-100 h-[38px]"><input type="checkbox" v-model="item.isPeakSync" class="w-4 h-4"><label class="text-[9px] font-black text-orange-600 uppercase ml-1">Peak Sync</label></div>
+                    <div class="flex items-center gap-1 text-slate-400">H:<input type="number" v-model="item.hours" class="w-10 p-2 border rounded-lg text-center font-bold text-blue-600 bg-white"></div>
+                    <div class="flex items-center gap-1 text-slate-400">D:<input type="number" v-model="item.days" class="w-10 p-2 border rounded-lg text-center font-bold text-emerald-600 bg-white"></div>
+                    <div class="flex gap-1 ml-auto text-lg items-center">
                         <button @click="duplicateAppliance(item, index)" class="p-2 hover:bg-indigo-50 rounded-xl">📑</button>
                         <button @click="removeAppliance(index)" class="p-2 hover:bg-red-50 rounded-xl">🗑️</button>
                     </div>
@@ -110,25 +156,24 @@
             </div>
 
             <div class="pt-6 border-t mt-6 flex flex-wrap gap-3 items-center">
-                <button @click="showSyncPopup = true" class="bg-slate-900 text-white px-6 py-3 rounded-full text-[10px] font-black hover:bg-indigo-600 shadow-xl flex items-center gap-2 transition-all">
-                    🔄 SYNC / BACKUP DATA (TEXT MODE)
+                <button @click="showSyncPopup = true" class="bg-slate-900 text-white px-6 py-3 rounded-full text-[10px] font-black hover:bg-indigo-600 transition-all flex items-center gap-2 shadow-xl">
+                    🔄 SYNC TO IPAD (TEXT MODE)
                 </button>
-                <button @click="resetApp" class="text-[9px] text-slate-300 font-bold hover:text-red-500 uppercase ml-auto">⚠️ Reset DB</button>
+                <button @click="resetApp" class="text-[9px] text-slate-300 font-bold hover:text-red-500 uppercase ml-auto">⚠️ Reset All</button>
             </div>
         </div>
 
         <div v-if="showSyncPopup" class="popup-overlay no-print" @click.self="showSyncPopup = false">
-            <div class="bg-white p-8 rounded-[40px] shadow-2xl max-w-xl w-full space-y-4">
-                <h4 class="font-black text-indigo-700 text-center uppercase tracking-widest border-b pb-4">🔄 Universal Data Sync</h4>
+            <div class="bg-white p-8 rounded-[40px] shadow-2xl max-w-xl w-full space-y-4 border-t-4 border-indigo-600">
+                <h4 class="font-black text-indigo-700 text-center uppercase">🔄 Universal Data Sync</h4>
                 <div class="space-y-2">
-                    <p class="text-[10px] font-black text-slate-400 uppercase">1. รหัสข้อมูลในเครื่องนี้ (MAC):</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase">1. ก๊อปปี้รหัสนี้จาก MAC:</p>
                     <textarea readonly class="w-full h-32 p-4 bg-slate-50 border rounded-2xl text-[10px] font-mono break-all focus:outline-none" @click="$event.target.select()">{{ exportText }}</textarea>
-                    <p class="text-[9px] text-slate-400 italic">คลิกที่รหัสเพื่อเลือกทั้งหมด แล้วก๊อปปี้ส่งเข้า LINE</p>
                 </div>
                 <div class="space-y-2 pt-4 border-t border-dashed">
-                    <p class="text-[10px] font-black text-indigo-500 uppercase">2. วางรหัสข้อมูล (IPAD):</p>
-                    <textarea v-model="importText" class="w-full h-32 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl text-[10px] font-mono break-all focus:outline-none" placeholder="Paste your code here..."></textarea>
-                    <button @click="processImport" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-xs uppercase shadow-xl transition-all active:scale-95">📥 IMPORT TO THIS DEVICE</button>
+                    <p class="text-[10px] font-black text-indigo-500 uppercase">2. วางรหัสบน IPAD แล้วกด IMPORT:</p>
+                    <textarea v-model="importText" class="w-full h-32 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl text-[10px] font-mono break-all focus:outline-none" placeholder="วางรหัสที่นี่..."></textarea>
+                    <button @click="processImport" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-xs uppercase shadow-xl transition-all active:scale-95">📥 IMPORT DATA TO IPAD</button>
                 </div>
                 <button @click="showSyncPopup = false" class="w-full text-slate-300 text-[10px] font-bold uppercase mt-2">Close</button>
             </div>
@@ -142,26 +187,17 @@
 
         createApp({
             setup() {
-                const rate = ref(4.65); const isRendering = ref(false); const showSyncPopup = ref(false);
-                const importText = ref('');
-                const options = ref([{ title: 'OPTION 1', solarKw: 5.0, batteryKwh: 0, cost: 180000 }, { title: 'OPTION 2', solarKw: 10.0, batteryKwh: 0, cost: 320000 }]);
-                const appliances = ref([]); const genId = () => Math.random().toString(36).substr(2, 9) + Date.now();
-
+                const rate = ref(4.65); const isRendering = ref(false); const showSyncPopup = ref(false); const importText = ref('');
+                // เพิ่ม desc ในโครงสร้างเริ่มต้น
+                const options = ref([{ title: 'OPTION 1', desc: 'รายละเอียดระบบ', solarKw: 5.0, batteryKwh: 0, cost: 180000 }, { title: 'OPTION 2', desc: 'รายละเอียดระบบ', solarKw: 10.0, batteryKwh: 0, cost: 320000 }]);
+                const appliances = ref([]); const showMagicPopup = ref(false); const houseType = ref('medium'); const familySize = ref('3-4'); const magicEditIndex = ref(null);
+                const genId = () => Math.random().toString(36).substr(2, 9) + Date.now();
                 const initSortable = () => { const el = document.getElementById('appliance-list'); if (el) Sortable.create(el, { handle: '.drag-handle', ghostClass: 'sortable-ghost', onEnd: (evt) => { const list = [...appliances.value]; const item = list.splice(evt.oldIndex, 1)[0]; list.splice(evt.newIndex, 0, item); appliances.value = list; }}); };
 
                 onMounted(() => {
                     const saved = localStorage.getItem(PERMANENT_STORAGE_KEY);
-                    if (saved) {
-                        try {
-                            const p = JSON.parse(saved);
-                            // ระบบกู้ข้อมูลอัจฉริยะ (ถ้าเป็นโครงสร้างเดิมหรือใหม่ ก็รองรับหมดครับ)
-                            rate.value = p.rate || 4.65;
-                            options.value = p.options || options.value;
-                            appliances.value = p.appliances || [];
-                        } catch(e) { console.error('Data error, but safe.'); }
-                    } else {
-                        appliances.value = [{ id: genId(), name: 'รายการตัวอย่าง', type: 'ac_inverter', time: 'night', power: 15000, hours: 10, days: 30 }];
-                    }
+                    if (saved) { try { const p = JSON.parse(saved); rate.value = p.rate || 4.65; options.value = p.options || options.value; appliances.value = p.appliances || []; } catch(e) { console.error('Data error recovered'); } }
+                    else { appliances.value = [{ id: genId(), name: 'รายการตัวอย่าง', type: 'ac_inverter', time: 'night', power: 15000, hours: 10, days: 30 }]; }
                     nextTick(() => initSortable());
                 });
 
@@ -169,9 +205,9 @@
 
                 const exportText = computed(() => localStorage.getItem(PERMANENT_STORAGE_KEY));
                 const formatNumber = (n) => Math.round(n || 0).toLocaleString();
+                const getKwRaw = (i) => (i.type.includes('ac') ? i.power/15/1000 : i.power/1000);
                 const getItemGrossCost = (i) => {
-                    const kw = (i.type.includes('ac') ? i.power/15/1000 : i.power/1000);
-                    const off = (i.type === 'ac_inverter' ? 0.6 : (i.type === 'fridge' ? 0.4 : (i.type === 'computer' ? 0.5 : 1.0)));
+                    const kw = getKwRaw(i); const off = (i.type === 'ac_inverter' ? 0.6 : (i.type === 'fridge' ? 0.4 : (i.type === 'computer' ? 0.5 : 1.0)));
                     return kw * i.hours * off * i.days * rate.value;
                 };
                 const totalGrossCost = computed(() => appliances.value.reduce((sum, i) => sum + getItemGrossCost(i), 0));
@@ -179,29 +215,28 @@
                 const calculateSavings = (opt) => {
                     let dKwh = 0; const peakCap = opt.solarKw * 0.9;
                     appliances.value.forEach(i => {
-                        const kw = (i.type.includes('ac') ? i.power/15/1000 : i.power/1000);
-                        if (i.time !== 'night') {
-                            const ratio = (i.time === 'all' ? 0.55 : 1.0);
-                            const actKw = Math.min(kw, peakCap);
+                        const kw = getKwRaw(i); if (i.time !== 'night') {
+                            const ratio = (i.time === 'all' ? 0.55 : 1.0); const actKw = Math.min(kw, peakCap);
                             dKwh += (kw * i.hours * i.days * ratio) * (actKw / kw) * 0.9;
                         }
                     });
-                    const batS = opt.batteryKwh > 0 ? Math.min(opt.batteryKwh * 30 * 0.85, 300) : 0;
+                    const batS = opt.batteryKwh > 0 ? Math.min(opt.batteryKwh * 30 * 0.85, (totalGrossCost.value / rate.value) * 0.4) : 0;
                     return (Math.min(opt.solarKw * 120, dKwh) + batS) * rate.value;
                 };
 
                 return {
                     rate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, calculateSavings, isRendering, showSyncPopup, exportText, importText,
+                    getSavePercent: (s) => (totalGrossCost.value > 0 ? ((s / totalGrossCost.value) * 100).toFixed(1) : 0),
                     calculatePayback: (opt) => { const s = calculateSavings(opt); return s > 0 ? (opt.cost / (s * 12)).toFixed(1) : '-'; },
-                    processImport: () => { try { JSON.parse(importText.value); if(confirm('ต้องการทับข้อมูลปัจจุบันด้วยข้อมูลใหม่?')) { localStorage.setItem(PERMANENT_STORAGE_KEY, importText.value); location.reload(); } } catch(e) { alert('รหัสข้อมูลไม่ถูกต้องครับ'); } },
-                    addOption: () => options.value.push({ title: 'NEW', solarKw: 5, batteryKwh: 0, cost: 200000 }),
+                    processImport: () => { try { JSON.parse(importText.value); if(confirm('ทับข้อมูลปัจจุบัน?')) { localStorage.setItem(PERMANENT_STORAGE_KEY, importText.value); location.reload(); } } catch(e) { alert('รหัสข้อมูลไม่ถูกต้องครับ'); } },
+                    addOption: () => options.value.push({ title: 'NEW', desc: 'รายละเอียด', solarKw: 5, batteryKwh: 0, cost: 200000 }),
                     removeOption: (i) => options.value.splice(i, 1),
                     addAppliance: () => appliances.value.push({ id: genId(), name: 'รายการใหม่', type: 'general', time: 'all', power: 1000, hours: 1, days: 30 }),
                     duplicateAppliance: (item, index) => { const copy = JSON.parse(JSON.stringify(item)); copy.id = genId(); appliances.value.splice(index+1, 0, copy); },
                     removeAppliance: (idx) => appliances.value.splice(idx, 1),
                     handlePrint: () => { isRendering.value = true; nextTick(() => { window.print(); isRendering.value = false; }); },
-                    saveAsImage: () => { isRendering.value = true; nextTick(() => { html2canvas(document.getElementById('full-report-area'), { scale: 3 }).then(cv => { const l=document.createElement('a'); l.download='SolarReport.jpg'; l.href=cv.toDataURL('image/jpeg'); l.click(); isRendering.value = false; }); }); },
-                    resetApp: () => { if(confirm('ล้างข้อมูลทั้งหมด?')) { localStorage.removeItem(PERMANENT_STORAGE_KEY); location.reload(); } }
+                    saveAsImage: () => { isRendering.value = true; nextTick(() => { html2canvas(document.getElementById('full-report-area'), { scale: 3 }).then(cv => { const l=document.createElement('a'); l.download='SolarROI_Report.jpg'; l.href=cv.toDataURL('image/jpeg'); l.click(); isRendering.value = false; }); }); },
+                    resetApp: () => { if(confirm('Reset ทั้งหมด?')) { localStorage.removeItem(PERMANENT_STORAGE_KEY); location.reload(); } }
                 };
             }
         }).mount('#app');
