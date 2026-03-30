@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.24.9.5 - Professional Layout</title>
+    <title>Solar Pro V.24.9.7 - Magic Button Placement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -24,7 +24,7 @@
         
         <div class="flex justify-between items-center no-print">
             <div class="flex flex-col">
-                <h1 class="text-xl font-black text-indigo-700 italic uppercase">Solar Pro V.24.9.5</h1>
+                <h1 class="text-xl font-black text-indigo-700 italic uppercase">Solar Pro V.24.9.7</h1>
                 <span class="text-[9px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit">Professional Layout & Data Sync</span>
             </div>
             <div class="flex gap-2">
@@ -133,21 +133,22 @@
                 <div class="flex gap-4 items-center">
                     <span class="text-[10px] font-bold text-slate-400 uppercase">Rate:</span>
                     <input type="number" v-model="rate" step="0.01" class="w-16 border rounded p-1 text-center font-bold text-blue-600 bg-white">
+                    <button @click="showMagicPopup = true" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg text-xs font-bold shadow-sm transition-colors flex items-center gap-1"><span>🪄</span> MAGIC FILL</button>
                     <button @click="addAppliance" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-xs font-bold shadow-md">+ ADD ITEM</button>
                 </div>
             </div>
             <div id="appliance-list" class="space-y-3">
                 <div v-for="(item, index) in appliances" :key="item.id" class="flex flex-wrap md:flex-nowrap gap-3 items-center bg-slate-50 p-3 rounded-2xl text-[11px] border transition-all hover:border-indigo-200 group">
                     <div class="drag-handle p-2 text-slate-300 group-hover:text-indigo-400 text-lg">⠿</div>
-                    <input type="text" v-model="item.name" class="font-bold p-2 bg-white border rounded-lg flex-1 min-w-[140px]">
+                    <input type="text" v-model="item.name" class="font-bold p-2 bg-white border rounded-lg flex-1 min-w-[80px]">
                     <div class="flex gap-2 text-center font-bold">
                         <select v-model="item.time" class="p-2 border rounded-lg bg-white w-24"><option value="day">☀️ Day</option><option value="night">🌙 Night</option><option value="all">🔄 All</option></select>
                         <select v-model="item.type" class="p-2 border rounded-lg bg-white w-32 font-bold"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="general">General</option></select>
                     </div>
-                    <div class="flex items-center gap-1"><input type="number" v-model="item.power" class="w-20 p-2 border rounded-lg text-center font-bold bg-white focus:outline-none"><button v-if="item.name.includes('จิปาถะ') || item.name.includes('เบ็ดเตล็ด')" @click="openMagicFill(index)" class="p-2 hover:bg-indigo-100 rounded-xl">🪄</button></div>
+                    <div class="flex items-center gap-1"><input type="number" v-model="item.power" class="w-20 p-2 border rounded-lg text-center font-bold bg-white focus:outline-none"></div>
                     <div class="flex items-center gap-1 bg-orange-50 px-3 py-2 rounded-lg border border-orange-100 h-[38px]"><input type="checkbox" v-model="item.isPeakSync" class="w-4 h-4"><label class="text-[9px] font-black text-orange-600 uppercase ml-1">Peak Sync</label></div>
-                    <div class="flex items-center gap-1 text-slate-400">H:<input type="number" v-model="item.hours" class="w-10 p-2 border rounded-lg text-center font-bold text-blue-600 bg-white"></div>
-                    <div class="flex items-center gap-1 text-slate-400">D:<input type="number" v-model="item.days" class="w-10 p-2 border rounded-lg text-center font-bold text-emerald-600 bg-white"></div>
+                    <div class="flex items-center gap-1 text-slate-400">H:<input type="number" v-model="item.hours" class="w-14 p-2 border rounded-lg text-center font-bold text-blue-600 bg-white"></div>
+                    <div class="flex items-center gap-1 text-slate-400">D:<input type="number" v-model="item.days" class="w-14 p-2 border rounded-lg text-center font-bold text-emerald-600 bg-white"></div>
                     <div class="flex gap-1 ml-auto text-lg items-center">
                         <button @click="duplicateAppliance(item, index)" class="p-2 hover:bg-indigo-50 rounded-xl">📑</button>
                         <button @click="removeAppliance(index)" class="p-2 hover:bg-red-50 rounded-xl">🗑️</button>
@@ -160,6 +161,27 @@
                     🔄 SYNC TO IPAD (TEXT MODE)
                 </button>
                 <button @click="resetApp" class="text-[9px] text-slate-300 font-bold hover:text-red-500 uppercase ml-auto">⚠️ Reset All</button>
+            </div>
+        </div>
+
+        <div v-if="showMagicPopup" class="popup-overlay no-print" @click.self="showMagicPopup = false">
+            <div class="bg-white p-8 rounded-[40px] shadow-2xl max-w-lg w-full border-t-8 border-indigo-600 text-center">
+                <h4 class="font-black text-indigo-700 uppercase mb-6 tracking-widest italic">Intelligent Load Wizard</h4>
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase mb-3">1. ขนาดที่พักอาศัย</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button v-for="t in ['small','medium','large']" :key="t" @click="houseType=t" :class="houseType===t?'bg-indigo-600 text-white':'bg-slate-100 text-slate-500'" class="py-3 rounded-xl font-black uppercase text-[10px] transition-all">{{t}}</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase mb-3">2. จำนวนสมาชิก</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button v-for="s in ['1-2','3-4','5+']" :key="s" @click="familySize=s" :class="familySize===s?'bg-indigo-600 text-white':'bg-slate-100 text-slate-500'" class="py-3 rounded-xl font-black uppercase text-[10px] transition-all">{{s}}</button>
+                        </div>
+                    </div>
+                    <button @click="applyMagic" class="w-full bg-emerald-600 text-white py-4 mt-4 rounded-2xl font-black text-xs uppercase shadow-xl hover:bg-emerald-500 transition-all">✨ เสกโหลดลงรายการ</button>
+                </div>
             </div>
         </div>
 
@@ -188,9 +210,8 @@
         createApp({
             setup() {
                 const rate = ref(4.65); const isRendering = ref(false); const showSyncPopup = ref(false); const importText = ref('');
-                // เพิ่ม desc ในโครงสร้างเริ่มต้น
                 const options = ref([{ title: 'OPTION 1', desc: 'รายละเอียดระบบ', solarKw: 5.0, batteryKwh: 0, cost: 180000 }, { title: 'OPTION 2', desc: 'รายละเอียดระบบ', solarKw: 10.0, batteryKwh: 0, cost: 320000 }]);
-                const appliances = ref([]); const showMagicPopup = ref(false); const houseType = ref('medium'); const familySize = ref('3-4'); const magicEditIndex = ref(null);
+                const appliances = ref([]); const showMagicPopup = ref(false); const houseType = ref('medium'); const familySize = ref('3-4');
                 const genId = () => Math.random().toString(36).substr(2, 9) + Date.now();
                 const initSortable = () => { const el = document.getElementById('appliance-list'); if (el) Sortable.create(el, { handle: '.drag-handle', ghostClass: 'sortable-ghost', onEnd: (evt) => { const list = [...appliances.value]; const item = list.splice(evt.oldIndex, 1)[0]; list.splice(evt.newIndex, 0, item); appliances.value = list; }}); };
 
@@ -226,14 +247,34 @@
 
                 return {
                     rate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, calculateSavings, isRendering, showSyncPopup, exportText, importText,
+                    showMagicPopup, houseType, familySize,
                     getSavePercent: (s) => (totalGrossCost.value > 0 ? ((s / totalGrossCost.value) * 100).toFixed(1) : 0),
                     calculatePayback: (opt) => { const s = calculateSavings(opt); return s > 0 ? (opt.cost / (s * 12)).toFixed(1) : '-'; },
                     processImport: () => { try { JSON.parse(importText.value); if(confirm('ทับข้อมูลปัจจุบัน?')) { localStorage.setItem(PERMANENT_STORAGE_KEY, importText.value); location.reload(); } } catch(e) { alert('รหัสข้อมูลไม่ถูกต้องครับ'); } },
                     addOption: () => options.value.push({ title: 'NEW', desc: 'รายละเอียด', solarKw: 5, batteryKwh: 0, cost: 200000 }),
                     removeOption: (i) => options.value.splice(i, 1),
-                    addAppliance: () => appliances.value.push({ id: genId(), name: 'รายการใหม่', type: 'general', time: 'all', power: 1000, hours: 1, days: 30 }),
-                    duplicateAppliance: (item, index) => { const copy = JSON.parse(JSON.stringify(item)); copy.id = genId(); appliances.value.splice(index+1, 0, copy); },
+                    addAppliance: () => { appliances.value.push({ id: genId(), name: 'รายการใหม่', type: 'general', time: 'all', power: 1000, hours: 1, days: 30 }); nextTick(()=>initSortable()); },
+                    duplicateAppliance: (item, index) => { const copy = JSON.parse(JSON.stringify(item)); copy.id = genId(); appliances.value.splice(index+1, 0, copy); nextTick(()=>initSortable()); },
                     removeAppliance: (idx) => appliances.value.splice(idx, 1),
+                    
+                    // 🎯 ซ่อม 3: ปรับให้ Magic Fill สร้างบรรทัดใหม่แทนการแก้ของเก่า
+                    applyMagic: () => {
+                        let base = 400; if(houseType.value === 'medium') base = 600; if(houseType.value === 'large') base = 1000;
+                        const bonus = (parseInt(familySize.value) || 3) * 50;
+                        appliances.value.unshift({ 
+                            id: genId(), 
+                            name: `🪄 Baseload (${houseType.value})`, 
+                            type: 'general', 
+                            time: 'all', 
+                            power: base + bonus, 
+                            hours: 24, 
+                            days: 30,
+                            isPeakSync: false
+                        });
+                        showMagicPopup.value = false;
+                        nextTick(() => initSortable());
+                    },
+
                     handlePrint: () => { isRendering.value = true; nextTick(() => { window.print(); isRendering.value = false; }); },
                     saveAsImage: () => { isRendering.value = true; nextTick(() => { html2canvas(document.getElementById('full-report-area'), { scale: 3 }).then(cv => { const l=document.createElement('a'); l.download='SolarROI_Report.jpg'; l.href=cv.toDataURL('image/jpeg'); l.click(); isRendering.value = false; }); }); },
                     resetApp: () => { if(confirm('Reset ทั้งหมด?')) { localStorage.removeItem(PERMANENT_STORAGE_KEY); location.reload(); } }
