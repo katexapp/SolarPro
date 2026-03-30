@@ -3,191 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.24.10.1 - Real Pro Structure</title>
-    <script src="https://cdn.tailwindcss.com?v=2026.5"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js?v=2026.5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js?v=2026.5"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js?v=2026.5"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <title>Solar Pro V.24.10.2 - Reality Logic</title>
+    <script src="https://cdn.tailwindcss.com?v=2026.1"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js?v=2026.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js?v=2026.1"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js?v=2026.1"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Prompt', sans-serif; background-color: #f0f2f5; color: #1c1e21; margin: 0; }
-        .sidebar { background: linear-gradient(180deg, #1a73e8 0%, #1557b0 100%); min-height: 100vh; }
-        .card { background: white; border-radius: 1.25rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: 0.3s; }
-        .nav-link { border-radius: 0.75rem; transition: 0.2s; color: rgba(255,255,255,0.7); }
-        .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
-        .input-pro { background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 0.75rem; padding: 0.75rem; width: 100%; font-weight: 600; }
-        .input-pro:focus { border-color: #1a73e8; outline: none; background: white; }
-        .btn-primary { background: #1a73e8; color: white; border-radius: 0.75rem; padding: 0.75rem 1.5rem; font-weight: 900; transition: 0.2s; }
-        .btn-primary:hover { background: #1557b0; transform: translateY(-2px); }
-        .stat-val { font-size: 1.75rem; font-weight: 900; line-height: 1.2; }
-        [v-cloak] { display: none; }
-        @media print { .no-print { display: none; } }
+        body { font-family: 'Prompt', sans-serif; background: #f1f5f9; color: #1e293b; }
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .drag-handle { cursor: grab; }
+        .display-only { display: none; } .is-rendering .display-only { display: block !important; }
+        .is-rendering .input-only, .is-rendering .no-render { display: none !important; }
+        input { text-align: inherit; font-family: inherit; }
+        @media print { .no-print { display: none !important; } #full-report-area { background: white !important; padding: 0 !important; border: none !important; } }
     </style>
 </head>
-<body>
-    <div id="app" v-cloak class="flex flex-col md:flex-row min-h-screen">
-        <div class="sidebar w-full md:w-64 p-6 text-white no-print">
-            <div class="flex items-center gap-3 mb-10">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 font-black text-xl">S</div>
-                <h1 class="text-xl font-black tracking-tighter italic">SOLAR PRO</h1>
+<body class="p-4 md:p-8">
+    <div id="app" v-cloak class="max-w-6xl mx-auto space-y-6 pb-20">
+        
+        <div class="flex justify-between items-center no-print">
+            <div class="flex flex-col">
+                <h1 class="text-xl font-black text-indigo-700 italic uppercase">Solar Pro V.24.10.2</h1>
+                <span class="text-[9px] bg-emerald-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-tighter">Weather Reality 85% Enabled</span>
             </div>
-            <nav class="space-y-2">
-                <a href="#" class="nav-link active flex items-center gap-3 p-3 font-bold">📊 Dashboard</a>
-                <a href="#" class="nav-link flex items-center gap-3 p-3 font-bold opacity-50">⚙️ Settings</a>
-                <div class="pt-10">
-                    <p class="text-[10px] uppercase font-black opacity-50 mb-4 tracking-widest text-white">Simulation Engine</p>
-                    <div class="p-4 bg-white/10 rounded-2xl border border-white/10">
-                        <p class="text-[11px] font-black text-yellow-300 uppercase mb-1">Weather: 85%</p>
-                        <p class="text-[9px] leading-tight opacity-70">ปรับจูนประสิทธิภาพแดดเฉลี่ยตามหน้างานจริง</p>
-                    </div>
-                </div>
-            </nav>
-            <div class="mt-auto pt-10">
-                <button @click="takeSnapshot" class="w-full bg-white text-blue-600 py-3 rounded-xl font-black text-xs uppercase shadow-xl">📸 Export Report</button>
+            <div class="flex gap-2">
+                <button @click="saveAsImage" class="bg-indigo-600 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
+                <button @click="handlePrint" class="bg-slate-700 text-white text-[10px] font-black py-2.5 px-6 rounded-full shadow-lg flex items-center gap-2"><span>🖨️</span> PRINT</button>
             </div>
         </div>
 
-        <main class="flex-1 p-4 md:p-10" id="report-content">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                <div>
-                    <h2 class="text-2xl font-black text-slate-800">Financial Overview</h2>
-                    <p class="text-slate-500 font-bold">Solar Pro V.24.10.1 Real Structure</p>
+        <div id="full-report-area" :class="{'is-rendering': isRendering}" class="p-8 space-y-6 bg-slate-100 rounded-[40px] border border-slate-200 shadow-inner">
+            
+            <div class="bg-white rounded-3xl shadow-xl p-8 border-t-8 border-slate-900">
+                <div class="flex justify-between items-center mb-6 no-print border-b pb-2">
+                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest italic">Step 1: System Options Comparison</h2>
+                    <button @click="addOption" class="bg-indigo-100 text-indigo-600 text-[10px] font-black px-4 py-2 rounded-full hover:bg-indigo-200 transition-colors">+ ADD OPTION</button>
                 </div>
-                <div class="flex gap-2">
-                    <div class="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl font-black text-xs uppercase border border-blue-100">Verified Logic</div>
-                    <div class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl font-black text-xs uppercase border border-emerald-100 italic">Weather 85%</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="card p-6 border-b-4 border-blue-500">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Payback Period</p>
-                    <div class="stat-val text-blue-600">{{ paybackYears }} <span class="text-sm font-bold text-slate-400">Years</span></div>
-                </div>
-                <div class="card p-6 border-b-4 border-emerald-500">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Monthly Savings</p>
-                    <div class="stat-val text-emerald-500">฿{{ formatNumber(monthlySavings) }}</div>
-                </div>
-                <div class="card p-6 border-b-4 border-indigo-500">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">ROI (25-Year)</p>
-                    <div class="stat-val text-indigo-500">{{ roiPercent }}%</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="card p-6">
-                        <h3 class="font-black text-sm uppercase text-slate-500 mb-6 tracking-widest">System Configuration</h3>
-                        <div class="space-y-5">
-                            <div>
-                                <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Solar PV (kWp)</label>
-                                <input type="number" v-model.number="systemKw" class="input-pro">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative shadow-sm text-center">
+                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print shadow-md">✕</button>
+                        
+                        <div class="mb-4 space-y-1">
+                            <div class="input-only space-y-2">
+                                <input v-model="opt.title" class="w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b-2 border-dashed border-indigo-100 focus:outline-none focus:border-indigo-500 pb-1" placeholder="ชื่อ OPTION">
+                                <input v-model="opt.desc" class="w-full text-center text-[10px] font-bold text-slate-400 bg-transparent border-b border-dashed border-slate-200 focus:outline-none focus:border-slate-400 pb-1" placeholder="รายละเอียด (Inverter, แผง...)">
                             </div>
-                            <div>
-                                <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Battery (kWh)</label>
-                                <input type="number" v-model.number="batteryKwh" class="input-pro">
+                            <div class="display-only">
+                                <span class="text-xs font-black text-indigo-700 uppercase block">{{ opt.title || 'OPTION ' + (idx+1) }}</span>
+                                <span class="text-[9px] font-bold text-slate-400 block mt-0.5 italic">{{ opt.desc }}</span>
                             </div>
-                            <div>
-                                <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Investment Cost (฿)</label>
-                                <input type="number" v-model.number="cost" class="input-pro">
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
+                                <label class="text-[9px] font-bold uppercase text-slate-400">Solar (kW)</label>
+                                <span class="display-only font-black text-indigo-600">{{ opt.solarKw }} kW</span>
+                                <input type="number" v-model="opt.solarKw" class="input-only w-16 text-right font-black text-indigo-600 bg-transparent focus:outline-none">
                             </div>
-                            <div>
-                                <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Electric Rate (฿/Unit)</label>
-                                <input type="number" v-model.number="rate" step="0.01" class="input-pro">
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
+                                <label class="text-[9px] font-bold uppercase text-slate-400">Batt (kWh)</label>
+                                <span class="display-only font-black text-purple-600">{{ opt.batteryKwh }} kWh</span>
+                                <input type="number" v-model="opt.batteryKwh" class="input-only w-16 text-right font-black text-purple-600 bg-transparent focus:outline-none">
+                            </div>
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-100">
+                                <label class="text-[9px] font-bold uppercase text-slate-400">Budget (฿)</label>
+                                <span class="display-only font-black text-emerald-600">฿{{ formatNumber(opt.cost) }}</span>
+                                <input type="number" v-model="opt.cost" class="input-only w-24 text-right font-black text-emerald-600 bg-transparent focus:outline-none">
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="lg:col-span-8 space-y-6">
-                    <div class="card p-8">
-                        <h3 class="font-black text-sm uppercase text-slate-500 mb-6 tracking-widest">25-Year Wealth Projection</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="text-left text-[10px] font-black text-slate-400 uppercase border-b-2 pb-4">
-                                        <th class="py-4">Timeline</th>
-                                        <th>Annual Savings</th>
-                                        <th>Cumulative</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="font-bold text-slate-700">
-                                    <tr v-for="y in [1, 5, 10, 15, 20, 25]" :key="y" class="border-b border-slate-50">
-                                        <td class="py-4 text-slate-400">Year {{y}}</td>
-                                        <td>฿{{ formatNumber(getAnnualAtYear(y)) }}</td>
-                                        <td>฿{{ formatNumber(getCumulativeAtYear(y)) }}</td>
-                                        <td>
-                                            <span :class="getCumulativeAtYear(y) - cost > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-red-50 text-red-400'" class="px-3 py-1 rounded-lg text-[10px] uppercase">
-                                                {{ getCumulativeAtYear(y) - cost > 0 ? 'Profit' : 'Remaining' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-3 italic">Monthly Gross Consumption (ก่อนติดตั้ง)</p>
+                <div class="flex justify-center items-baseline gap-2">
+                    <span class="text-6xl font-black italic">฿{{ formatNumber(totalGrossCost) }}</span>
+                    <span class="text-slate-500 font-bold uppercase text-sm">/ เดือน</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl p-8 overflow-x-auto">
+                <table class="w-full text-center border-collapse">
+                    <thead>
+                        <tr class="text-[10px] text-slate-400 uppercase font-black">
+                            <th class="p-4 text-left border-b w-1/4">Analysis Metrics</th>
+                            <th v-for="(opt, idx) in options" :key="idx" class="p-4 border-b bg-slate-50 rounded-t-2xl min-w-[140px] text-indigo-700 font-black">
+                                <div class="flex flex-col">
+                                    <span class="uppercase italic">{{ opt.title || 'Option ' + (idx + 1) }}</span>
+                                    <span class="text-[8px] text-slate-400 not-italic lowercase font-bold">{{ opt.desc }}</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-bold">
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">ประหยัดต่อเดือน (Real)</td><td v-for="opt in options" class="p-5 font-black text-emerald-600 italic text-lg">฿{{ formatNumber(calculateSavings(opt)) }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">% ประหยัดเฉลี่ย</td><td v-for="opt in options" class="p-5 font-black text-blue-600 text-lg">{{ getSavePercent(calculateSavings(opt)) }}%</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">ยอดจ่ายสุทธิ</td><td v-for="opt in options" class="p-5 font-black text-slate-800 text-lg">฿{{ formatNumber(totalGrossCost - calculateSavings(opt)) }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-5 text-left font-bold text-slate-500 text-[10px] uppercase">คืนทุน (ปี)</td><td v-for="opt in options" class="p-5 font-black text-orange-500 text-lg">{{ calculatePayback(opt) }} ปี</td></tr>
+                    </tbody>
+                </table>
+                <div class="mt-4 p-3 bg-indigo-50 rounded-xl text-[9px] text-indigo-500 font-black uppercase text-center italic tracking-widest no-print">
+                    * Calculation Engine: Weather Adjusted 85% + System Loss 10%
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black">
+                        <tr><th class="p-5 font-bold">Appliance List</th><th class="p-5 text-center font-bold">Spec</th><th class="p-5 text-center font-bold">Hrs.</th><th class="p-5 text-center font-bold">Days</th><th class="p-5 text-right font-bold">Cost/Mo.</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 border-b font-bold">
+                        <tr v-for="item in appliances" :key="item.id">
+                            <td class="p-5 text-slate-700">
+                                {{ item.name }}
+                                <span v-if="item.isPeakSync" class="ml-1 text-[9px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase italic tracking-tighter">✨ PEAK</span>
+                            </td>
+                            <td class="p-5 text-center font-bold">{{ formatNumber(item.power) }} <span class="text-[8px] text-slate-400 uppercase">{{ item.type.includes('ac') ? 'BTU' : 'W' }}</span></td>
+                            <td class="p-5 text-center font-bold">{{ item.hours }}</td>
+                            <td class="p-5 text-center font-bold">{{ item.days }}</td>
+                            <td class="p-5 text-right font-black italic">฿{{ formatNumber(getItemGrossCost(item)) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 no-print space-y-4">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h3 class="font-bold text-xs text-blue-600 uppercase italic">🛠️ Configurator</h3>
+                <div class="flex gap-4 items-center">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Rate:</span>
+                    <input type="number" v-model="rate" step="0.01" class="w-16 border rounded p-1 text-center font-bold text-blue-600 bg-white">
+                    <button @click="addAppliance" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-xs font-bold shadow-md">+ ADD ITEM</button>
+                </div>
+            </div>
+            <div id="appliance-list" class="space-y-3">
+                <div v-for="(item, index) in appliances" :key="item.id" class="flex flex-wrap md:flex-nowrap gap-3 items-center bg-slate-50 p-3 rounded-2xl text-[11px] border transition-all hover:border-indigo-200 group">
+                    <div class="drag-handle p-2 text-slate-300 group-hover:text-indigo-400 text-lg">⠿</div>
+                    <input type="text" v-model="item.name" class="font-bold p-2 bg-white border rounded-lg flex-1 min-w-[140px]">
+                    <div class="flex gap-2 text-center font-bold">
+                        <select v-model="item.time" class="p-2 border rounded-lg bg-white w-24"><option value="day">☀️ Day</option><option value="night">🌙 Night</option><option value="all">🔄 All</option></select>
+                        <select v-model="item.type" class="p-2 border rounded-lg bg-white w-32 font-bold"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="general">General</option></select>
                     </div>
-                    
-                    <div class="bg-blue-600 p-8 rounded-[1.25rem] text-white shadow-xl relative overflow-hidden">
-                        <div class="relative z-10">
-                            <h3 class="text-xl font-black italic uppercase">Pro Summary</h3>
-                            <p class="font-bold opacity-80 mt-2">ระบบประเมินว่าคุณจะประหยัดเงินได้ทั้งหมด ฿{{ formatNumber(getCumulativeAtYear(25)) }} ภายใน 25 ปี โดยคำนวณแบบ Weather Adjusted 85% และ Panel Degradation 0.5% ต่อปี</p>
-                        </div>
-                        <div class="absolute -right-10 -bottom-10 opacity-10 font-black text-9xl italic">SOLAR</div>
+                    <div class="flex items-center gap-1"><input type="number" v-model="item.power" class="w-20 p-2 border rounded-lg text-center font-bold bg-white focus:outline-none"></div>
+                    <div class="flex items-center gap-1 bg-orange-50 px-3 py-2 rounded-lg border border-orange-100 h-[38px]"><input type="checkbox" v-model="item.isPeakSync" class="w-4 h-4"><label class="text-[9px] font-black text-orange-600 uppercase ml-1">Peak Sync</label></div>
+                    <div class="flex items-center gap-1 text-slate-400">H:<input type="number" v-model="item.hours" class="w-10 p-2 border rounded-lg text-center font-bold text-blue-600 bg-white"></div>
+                    <div class="flex items-center gap-1 text-slate-400">D:<input type="number" v-model="item.days" class="w-10 p-2 border rounded-lg text-center font-bold text-emerald-600 bg-white"></div>
+                    <div class="flex gap-1 ml-auto text-lg items-center">
+                        <button @click="duplicateAppliance(item, index)" class="p-2 hover:bg-indigo-50 rounded-xl">📑</button>
+                        <button @click="removeAppliance(index)" class="p-2 hover:bg-red-50 rounded-xl">🗑️</button>
                     </div>
                 </div>
             </div>
-        </main>
+
+            <div class="pt-6 border-t mt-6 flex flex-wrap gap-3 items-center">
+                <button @click="showSyncPopup = true" class="bg-slate-900 text-white px-6 py-3 rounded-full text-[10px] font-black hover:bg-indigo-600 transition-all flex items-center gap-2 shadow-xl">
+                    🔄 SYNC DATA (TEXT MODE)
+                </button>
+                <button @click="resetApp" class="text-[9px] text-slate-300 font-bold hover:text-red-500 uppercase ml-auto">⚠️ Reset All</button>
+            </div>
+        </div>
+
+        <div v-if="showSyncPopup" class="popup-overlay no-print" @click.self="showSyncPopup = false">
+            <div class="bg-white p-8 rounded-[40px] shadow-2xl max-w-xl w-full space-y-4 border-t-4 border-indigo-600 text-left">
+                <h4 class="font-black text-indigo-700 text-center uppercase">🔄 Universal Data Sync</h4>
+                <div class="space-y-2">
+                    <p class="text-[10px] font-black text-slate-400 uppercase">1. Export Code:</p>
+                    <textarea readonly class="w-full h-32 p-4 bg-slate-50 border rounded-2xl text-[10px] font-mono break-all focus:outline-none" @click="$event.target.select()">{{ exportText }}</textarea>
+                </div>
+                <div class="space-y-2 pt-4 border-t border-dashed">
+                    <p class="text-[10px] font-black text-indigo-500 uppercase">2. Import Code:</p>
+                    <textarea v-model="importText" class="w-full h-32 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl text-[10px] font-mono break-all focus:outline-none" placeholder="วางรหัสที่นี่..."></textarea>
+                    <button @click="processImport" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-xs uppercase shadow-xl transition-all active:scale-95">📥 IMPORT DATA</button>
+                </div>
+                <button @click="showSyncPopup = false" class="w-full text-slate-300 text-[10px] font-bold uppercase mt-2">Close</button>
+            </div>
+        </div>
+
     </div>
 
-<script>
-    const { createApp, ref, computed } = Vue;
+    <script>
+        const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
+        const PERMANENT_STORAGE_KEY = 'SOLAR_PRO_PERMANENT_STORAGE';
 
-    createApp({
-        setup() {
-            // ดึงค่าเดิมกลับมา
-            const systemKw = ref(5.0);
-            const batteryKwh = ref(7.0);
-            const cost = ref(265000);
-            const rate = ref(4.65);
-            
-            // 🎯 LOGIC: WEATHER 85% AFFECTS DAILY PRODUCTION
-            const WEATHER_FACTOR = 0.85;
-            const SYS_EFFICIENCY = 0.90;
+        createApp({
+            setup() {
+                const rate = ref(4.65); const isRendering = ref(false); const showSyncPopup = ref(false); const importText = ref('');
+                const options = ref([{ title: 'OPTION 1', desc: 'รายละเอียดระบบ', solarKw: 5.0, batteryKwh: 0, cost: 180000 }, { title: 'OPTION 2', desc: 'รายละเอียดระบบ', solarKw: 10.0, batteryKwh: 0, cost: 320000 }]);
+                const appliances = ref([]); 
+                const genId = () => Math.random().toString(36).substr(2, 9) + Date.now();
+                
+                const initSortable = () => { const el = document.getElementById('appliance-list'); if (el) Sortable.create(el, { handle: '.drag-handle', ghostClass: 'sortable-ghost', onEnd: (evt) => { const list = [...appliances.value]; const item = list.splice(evt.oldIndex, 1)[0]; list.splice(evt.newIndex, 0, item); appliances.value = list; }}); };
 
-            const formatNumber = (n) => Math.round(n).toLocaleString();
-
-            const monthlySavings = computed(() => {
-                // Production logic: ~4.2 kWh per 1kWp per day
-                const dailyGen = systemKw.value * 4.2 * WEATHER_FACTOR * SYS_EFFICIENCY;
-                const batterySaved = batteryKwh.value * 0.90 * SYS_EFFICIENCY; 
-                const totalDailySavedBaht = (dailyGen + batterySaved) * rate.value;
-                return totalDailySavedBaht * 30;
-            });
-
-            const yearlySavings = computed(() => monthlySavings.value * 12);
-            const paybackYears = computed(() => (cost.value / yearlySavings.value).toFixed(1));
-            const roiPercent = computed(() => Math.round(((yearlySavings.value * 25 - cost.value) / cost.value) * 100));
-
-            const getAnnualAtYear = (year) => yearlySavings.value * Math.pow(0.995, year - 1);
-            const getCumulativeAtYear = (year) => {
-                let total = 0;
-                for(let i = 1; i <= year; i++) total += getAnnualAtYear(i);
-                return total;
-            };
-
-            const takeSnapshot = () => {
-                html2canvas(document.querySelector("#report-content"), { scale: 2 }).then(canvas => {
-                    let a = document.createElement('a');
-                    a.download = `SolarPro-V24-10-Report.png`;
-                    a.href = canvas.toDataURL();
-                    a.click();
+                onMounted(() => {
+                    const saved = localStorage.getItem(PERMANENT_STORAGE_KEY);
+                    if (saved) { try { const p = JSON.parse(saved); rate.value = p.rate || 4.65; options.value = p.options || options.value; appliances.value = p.appliances || []; } catch(e) { console.error('Recovery Error'); } }
+                    else { appliances.value = [{ id: genId(), name: 'ตัวอย่างแอร์', type: 'ac_inverter', time: 'day', power: 15000, hours: 10, days: 30 }]; }
+                    nextTick(() => initSortable());
                 });
-            };
 
-            return { systemKw, batteryKwh, cost, rate, monthlySavings, yearlySavings, paybackYears, roiPercent, formatNumber, getAnnualAtYear, getCumulativeAtYear, takeSnapshot };
-        }
-    }).mount('#app');
-</script>
+                watch([rate, options, appliances], () => { localStorage.setItem(PERMANENT_STORAGE_KEY, JSON.stringify({ rate: rate.value, options: options.value, appliances: appliances.value })); }, { deep: true });
+
+                const exportText = computed(() => localStorage.getItem(PERMANENT_STORAGE_KEY));
+                const formatNumber = (n) => Math.round(n || 0).toLocaleString();
+                
+                // 🎯 ปรับ Logic การกินไฟให้เหมือน Pro (หาร 25 สำหรับแอร์)
+                const getKwRaw = (i) => {
+                    if (i.type === 'ac_inverter') return i.power / 25 / 1000;
+                    if (i.type === 'ac_standard') return i.power / 15 / 1000;
+                    return i.power / 1000;
+                };
+
+                const getItemGrossCost = (i) => {
+                    const kw = getKwRaw(i); 
+                    const dutyCycle = (i.type === 'fridge' ? 0.4 : (i.type === 'computer' ? 0.5 : 1.0));
+                    return kw * i.hours * dutyCycle * i.days * rate.value;
+                };
+
+                const totalGrossCost = computed(() => appliances.value.reduce((sum, i) => sum + getItemGrossCost(i), 0));
+
+                // 🎯 ⛅ WEATHER REALITY ENGINE (85%)
+                const calculateSavings = (opt) => {
+                    let dKwh = 0; 
+                    const peakCap = opt.solarKw * 0.9; // Inverter/Loss factor
+                    const WEATHER_FACTOR = 0.85; // 🎯 ตบด้วยค่าแดดเฉลี่ยไทย 85%
+
+                    appliances.value.forEach(i => {
+                        const kw = getKwRaw(i); 
+                        if (i.time !== 'night') {
+                            const ratio = (i.time === 'all' ? 0.55 : 1.0); // % การใช้งานช่วงกลางวัน
+                            // คำนวณการใช้ไฟตรงจากแดด
+                            dKwh += (kw * i.hours * i.days * ratio) * WEATHER_FACTOR;
+                        }
+                    });
+
+                    // คำนวณแบตเตอรี่ (ถ้ามี)
+                    const batS = opt.batteryKwh > 0 ? (opt.batteryKwh * 0.85 * 30) : 0; 
+                    
+                    // ปรับจูนให้ไม่เกินกำลังผลิตสูงสุดของแผง (kWp * 4.2 ชม.แดด)
+                    const maxGen = (opt.solarKw * 4.2 * 30) * WEATHER_FACTOR;
+                    const realSavedKwh = Math.min(dKwh + batS, maxGen);
+
+                    return realSavedKwh * rate.value;
+                };
+
+                return {
+                    rate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, calculateSavings, isRendering, showSyncPopup, exportText, importText,
+                    getSavePercent: (s) => (totalGrossCost.value > 0 ? ((s / totalGrossCost.value) * 100).toFixed(1) : 0),
+                    calculatePayback: (opt) => { const s = calculateSavings(opt); return s > 0 ? (opt.cost / (s * 12)).toFixed(1) : '-'; },
+                    processImport: () => { try { JSON.parse(importText.value); if(confirm('ทับข้อมูลปัจจุบัน?')) { localStorage.setItem(PERMANENT_STORAGE_KEY, importText.value); location.reload(); } } catch(e) { alert('รหัสข้อมูลไม่ถูกต้อง'); } },
+                    addOption: () => options.value.push({ title: 'NEW', desc: 'รายละเอียด', solarKw: 5, batteryKwh: 0, cost: 200000 }),
+                    removeOption: (i) => options.value.splice(i, 1),
+                    addAppliance: () => appliances.value.push({ id: genId(), name: 'รายการใหม่', type: 'general', time: 'all', power: 1000, hours: 1, days: 30 }),
+                    duplicateAppliance: (item, index) => { const copy = JSON.parse(JSON.stringify(item)); copy.id = genId(); appliances.value.splice(index+1, 0, copy); },
+                    removeAppliance: (idx) => appliances.value.splice(idx, 1),
+                    handlePrint: () => { isRendering.value = true; nextTick(() => { window.print(); isRendering.value = false; }); },
+                    saveAsImage: () => { isRendering.value = true; nextTick(() => { html2canvas(document.getElementById('full-report-area'), { scale: 3 }).then(cv => { const l=document.createElement('a'); l.download='SolarROI_Report.jpg'; l.href=cv.toDataURL('image/jpeg'); l.click(); isRendering.value = false; }); }); },
+                    resetApp: () => { if(confirm('Reset ทั้งหมด?')) { localStorage.removeItem(PERMANENT_STORAGE_KEY); location.reload(); } }
+                };
+            }
+        }).mount('#app');
+    </script>
 </body>
 </html>
