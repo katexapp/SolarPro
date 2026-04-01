@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.36.4.2 - Active Toggle</title>
+    <title>Solar Pro V.36.4.3 - Locked & Extended</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -29,9 +29,9 @@
     <div id="app" v-cloak class="max-w-6xl mx-auto space-y-6 pb-20 text-left">
         
         <div class="flex justify-between items-center no-print">
-            <div class="flex flex-col">
-                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.36.4.2</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Unit Active Control & Fix Save</span>
+            <div class="flex flex-col text-left">
+                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.36.4.3</h1>
+                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest">Code Locked | Description Added</span>
             </div>
             <div class="flex gap-2">
                 <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
@@ -47,14 +47,21 @@
                     <button @click="addOption" class="bg-indigo-50 text-indigo-600 text-[10px] font-black px-4 py-2 rounded-full hover:bg-indigo-100">+ NEW OPTION</button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative">
-                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print">✕</button>
-                        <input v-model="opt.title" class="input-only w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b border-dashed border-indigo-100 focus:outline-none mb-4">
-                        <div class="display-only text-xs font-black text-indigo-700 uppercase text-center mb-4">{{ opt.title }}</div>
+                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative text-left">
+                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print shadow-md font-black">✕</button>
+                        
+                        <div class="mb-4">
+                            <input v-model="opt.title" class="input-only w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b border-dashed border-indigo-100 focus:outline-none" placeholder="ชื่อ OPTION">
+                            <div class="display-only text-xs font-black text-indigo-700 uppercase text-center">{{ opt.title }}</div>
+                            
+                            <input v-model="opt.desc" class="input-only w-full text-center text-[10px] font-bold text-slate-400 bg-transparent border-b border-dashed border-slate-200 focus:outline-none mt-1" placeholder="รายละเอียด (Inverter, แผง...)">
+                            <div class="display-only text-[9px] font-bold text-slate-400 text-center italic mt-0.5">{{ opt.desc }}</div>
+                        </div>
+
                         <div class="space-y-2 text-left">
-                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">Solar Array</label><input type="number" v-model="opt.solarKw" class="input-only w-16 text-right font-black text-indigo-600"><span class="display-only font-black text-indigo-600">{{ opt.solarKw }} kWp</span></div>
-                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">ESS Storage</label><input type="number" v-model="opt.batteryKwh" class="input-only w-16 text-right font-black text-purple-600"><span class="display-only font-black text-purple-600">{{ opt.batteryKwh }} kWh</span></div>
-                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">Investment</label><input type="number" v-model="opt.cost" class="input-only w-24 text-right font-black text-emerald-600"><span class="display-only font-black text-emerald-600">฿{{ formatNumber(opt.cost) }}</span></div>
+                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">Solar Array</label><input type="number" v-model="opt.solarKw" class="input-only w-16 text-right font-black text-indigo-600 bg-transparent"><span class="display-only font-black text-indigo-600">{{ opt.solarKw }} kWp</span></div>
+                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">ESS Storage</label><input type="number" v-model="opt.batteryKwh" class="input-only w-16 text-right font-black text-purple-600 bg-transparent"><span class="display-only font-black text-purple-600">{{ opt.batteryKwh }} kWh</span></div>
+                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">Investment</label><input type="number" v-model="opt.cost" class="input-only w-24 text-right font-black text-emerald-600 bg-transparent"><span class="display-only font-black text-emerald-600">฿{{ formatNumber(opt.cost) }}</span></div>
                         </div>
                     </div>
                 </div>
@@ -84,8 +91,8 @@
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-6 items-center border-l pl-8 ml-auto text-left">
-                    <div v-if="meterType === 'Residential'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">Standard Rate (฿)</label><input type="number" v-model="rateFlat" step="0.01" class="w-16 font-black text-indigo-600 bg-transparent text-sm"></div>
-                    <div v-if="meterType === 'TOU'" class="flex gap-4 text-left"><div class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase">Peak (฿)</label><input type="number" v-model="ratePeak" step="0.01" class="w-16 font-black text-orange-600 bg-transparent text-sm"></div><div class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase">Off-Peak (฿)</label><input type="number" v-model="rateOff" step="0.01" class="w-16 font-black text-blue-600 bg-transparent text-sm"></div></div>
+                    <div v-if="meterType === 'Residential'" class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase">Standard Rate (฿)</label><input type="number" v-model="rateFlat" step="0.01" class="w-16 font-black text-indigo-600 bg-transparent text-sm"></div>
+                    <div v-if="meterType === 'TOU'" class="flex gap-4"><div class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Peak (฿)</label><input type="number" v-model="ratePeak" step="0.01" class="w-16 font-black text-orange-600 bg-transparent text-sm"></div><div class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Off-Peak (฿)</label><input type="number" v-model="rateOff" step="0.01" class="w-16 font-black text-blue-600 bg-transparent text-sm"></div></div>
                     <div v-if="exportMode === 'Export'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">FIT Rate (฿)</label><input type="number" v-model="exportRate" step="0.01" class="w-16 font-black text-emerald-600 bg-transparent text-sm"></div>
                 </div>
             </div>
@@ -95,14 +102,18 @@
                     <thead>
                         <tr class="text-[10px] text-slate-400 uppercase font-black border-b text-center">
                             <th class="p-4 text-left border-b w-[22%]">ROI Performance Analysis</th>
-                            <th v-for="opt in options" class="p-4 border-b font-black text-indigo-700 uppercase italic text-center">{{ opt.title }}</th>
+                            <th v-for="opt in options" class="p-4 border-b font-black text-indigo-700 uppercase italic text-center">
+                                <div class="flex flex-col">
+                                    <span>{{ opt.title }}</span>
+                                    <span class="text-[8px] text-slate-400 not-italic font-bold">{{ opt.desc }}</span>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="text-sm font-bold text-left">
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Monthly Net Savings</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-emerald-600 text-2xl font-black text-center">฿{{ formatNumber(res.totalSavings) }}</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Self-Consumption</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center">{{ res.sc.toFixed(1) }}%</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Self-Sufficiency</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center">{{ res.ss.toFixed(1) }}%</td></tr>
-                        <tr class="border-b border-slate-50 text-slate-400"><td class="p-4 text-left text-[10px] uppercase italic text-left">{{ exportMode === 'Export' ? 'Grid Export Revenue' : 'Energy Wasted (kWh/Mo)' }}</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-xs text-center" :class="exportMode === 'Export' ? 'text-blue-500 font-bold' : 'text-red-400'">{{ exportMode === 'Export' ? '+฿'+formatNumber(res.exportRevenue) : res.wasted.toFixed(1) + ' kWh' }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500 text-left">Monthly Net Savings</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-emerald-600 text-2xl font-black text-center">฿{{ formatNumber(res.totalSavings) }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500 text-left">Self-Sufficiency</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center">{{ res.ss.toFixed(1) }}%</td></tr>
+                        <tr class="border-b border-slate-50 text-slate-400"><td class="p-4 text-left text-[10px] uppercase italic text-left">{{ exportMode === 'Export' ? 'Grid Export' : 'Wasted' }}</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-xs text-center" :class="exportMode === 'Export' ? 'text-blue-500 font-bold' : 'text-red-400'">{{ exportMode === 'Export' ? '+฿'+formatNumber(res.exportRevenue) : res.wasted.toFixed(1) + ' kWh' }}</td></tr>
                         <tr class="border-b border-slate-50 bg-slate-50/50"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black text-left">Final Monthly Pay</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center">฿{{ formatNumber(totalGrossCost - res.totalSavings) }}</td></tr>
                         <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500 text-left">ROI: Payback Period</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-orange-500 text-xl font-black text-center">{{ calculatePayback(options[idx], res.totalSavings) }} Years</td></tr>
                     </tbody>
@@ -112,17 +123,17 @@
             <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden text-left">
                 <table class="w-full text-left text-sm table-fixed">
                     <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left">
-                        <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%]">Spec</th><th class="p-5 text-center w-[30%]">Schedule</th><th class="p-5 text-center w-[10%]">Days</th><th class="p-5 text-right w-[20%]">Cost/Mo.</th></tr>
+                        <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%]">Spec</th><th class="p-5 text-center w-[30%] text-center">Schedule</th><th class="p-5 text-center w-[10%] text-center">Days</th><th class="p-5 text-right w-[20%] text-right">Cost/Mo.</th></tr>
                     </thead>
-                    <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left text-left">
+                    <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left">
                         <tr v-for="(item, idx) in appliances" :key="item.id" :class="item.active === false ? 'opacity-30' : ''">
-                            <td class="p-5 text-left"><div class="flex items-center gap-2"><span class="no-render drag-handle text-lg">⠿</span>
-                                <button @click="item.active = !item.active" class="no-render text-lg leading-none" :title="item.active ? 'เปิดอยู่' : 'ปิดอยู่'">{{ item.active !== false ? '☀️' : '🌑' }}</button>
-                                <span class="font-black text-indigo-700 uppercase tracking-tight truncate">{{ item.name }}</span></div></td>
-                            <td class="p-5 text-center text-[10px] whitespace-nowrap">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase">{{ item.type.includes('ac') ? 'BTU' : 'W' }}</span></td>
+                            <td class="p-5 text-left"><div class="flex items-center gap-2"><span class="no-render drag-handle text-lg text-left">⠿</span>
+                                <button @click="item.active = !item.active" class="no-render text-lg leading-none">{{ item.active !== false ? '☀️' : '🌑' }}</button>
+                                <span class="font-black text-indigo-700 uppercase tracking-tight truncate text-left">{{ item.name }}</span></div></td>
+                            <td class="p-5 text-center text-[10px] whitespace-nowrap text-center">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase">{{ item.type.includes('ac') ? 'BTU' : 'W' }}</span></td>
                             <td class="p-5 text-center"><div class="flex gap-[2px] justify-center items-center"><div v-for="h in 24" :key="h-1" class="mini-dot" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
-                            <td class="p-5 text-center font-black text-emerald-600">{{ item.days }}</td>
-                            <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10">฿{{ formatNumber(getItemGrossCost(item)) }}
+                            <td class="p-5 text-center font-black text-emerald-600 text-center">{{ item.days }}</td>
+                            <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10 text-right">฿{{ formatNumber(getItemGrossCost(item)) }}
                                 <button @click="removeAppliance(idx)" class="no-render absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-200 hover:text-red-500 transition-colors">🗑️</button>
                             </td>
                         </tr>
@@ -137,9 +148,9 @@
                 <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-md transition-all text-left">
                     <div class="lg:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
                         <div class="col-span-2 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
-                        <div class="text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
-                        <div class="text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm"></div>
-                        <div class="col-span-4 text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest text-left">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
+                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
+                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm"></div>
+                        <div class="col-span-4 text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest text-left">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
                     </div>
                     <div class="lg:col-span-7 flex flex-col gap-4 text-left text-left">
                         <div class="flex justify-between items-center px-1 text-left">
@@ -150,10 +161,10 @@
                                 <button @click="applyPreset(item, 'night')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Night</button>
                             </div>
                         </div>
-                        <div class="jumbo-slot-grid text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left text-left">{{ h-1 }}</div></div>
+                        <div class="jumbo-slot-grid text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left">{{ h-1 }}</div></div>
                     </div>
                 </div>
-                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center">+ REGISTER NEW SYSTEM DEVICE</button>
+                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center">+ REGISTER NEW DEVICE</button>
             </div>
         </div>
         <div class="pt-10 flex justify-center no-print text-center"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em] text-center">⚠️ Purge All Storage</button></div>
@@ -169,7 +180,7 @@
             const meterType = ref('Residential'); const exportMode = ref('Export');
             const rateFlat = ref(4.70); const ratePeak = ref(5.80); const rateOff = ref(2.65); const exportRate = ref(2.20);
             const isRendering = ref(false);
-            const options = ref([{ title: 'PLAN A', solarKw: 5.0, batteryKwh: 5.0, cost: 220000 }, { title: 'PLAN B', solarKw: 10.0, batteryKwh: 10.0, cost: 410000 }]);
+            const options = ref([{ title: 'PLAN A', desc: 'รายละเอียดแผน A', solarKw: 5.0, batteryKwh: 5.0, cost: 220000 }, { title: 'PLAN B', desc: 'รายละเอียดแผน B', solarKw: 10.0, batteryKwh: 10.0, cost: 410000 }]);
             const appliances = ref([]); 
             const genId = () => Math.random().toString(36).substr(2, 9) + Date.now();
 
@@ -201,7 +212,7 @@
             }, { deep: true });
 
             const getDeviceWattage = (i) => {
-                if (i.active === false) return 0; // 🎯 ไม่คำนวณถ้าไม่ Active
+                if (i.active === false) return 0;
                 if (i.type === 'ac_inverter') return (i.power / 25) * 0.6;
                 if (i.type === 'ac_standard') return (i.power / 15) * 0.8;
                 if (i.type === 'fridge') return (i.power * 0.4);
@@ -210,7 +221,7 @@
             };
 
             const getItemGrossCost = (i) => {
-                if (i.active === false) return 0; // 🎯 ไม่คำนวณถ้าไม่ Active
+                if (i.active === false) return 0;
                 let monthlyCost = 0; const watts = getDeviceWattage(i);
                 (i.slots || []).forEach(h => {
                     let curRate = meterType.value === 'TOU' ? ((h >= 9 && h < 22) ? ratePeak.value : rateOff.value) : rateFlat.value;
@@ -236,9 +247,7 @@
                         const stepSolarWh = (opt.solarKw * 1000 * 0.98) * yieldFactor * dt;
                         const noise = 0.9 + ((h * 13 + d * 7) % 20) / 100;
                         let stepLoadWh = 0;
-                        appliances.value.forEach(i => { 
-                            if (i.active !== false && isSlotActive(i, h) && i.days >= d) stepLoadWh += (getDeviceWattage(i) * dt * noise); 
-                        });
+                        appliances.value.forEach(i => { if (i.active !== false && isSlotActive(i, h) && i.days >= d) stepLoadWh += (getDeviceWattage(i) * dt * noise); });
                         totalSolarProdWh += stepSolarWh; totalLoadWh += stepLoadWh;
 
                         if (stepSolarWh >= stepLoadWh) {
@@ -246,9 +255,8 @@
                             const surplus = stepSolarWh - stepLoadWh;
                             const chargeAmount = Math.min(surplus, maxRateWh, (batCapWh - socWh) / 0.95);
                             socWh += (chargeAmount * 0.95);
-                            const remainingSurplus = surplus - chargeAmount;
-                            if (exportMode.value === 'Export') totalExportRevenue += (remainingSurplus / 1000) * exportRate.value;
-                            else totalWastedWh += remainingSurplus;
+                            if (exportMode.value === 'Export') totalExportRevenue += ((surplus - chargeAmount) / 1000) * exportRate.value;
+                            else totalWastedWh += (surplus - chargeAmount);
                         } else {
                             totalDirectWh += stepSolarWh; totalGridSaving += (stepSolarWh / 1000) * curRate;
                             const deficit = stepLoadWh - stepSolarWh;
@@ -260,11 +268,7 @@
                         socWh = Math.min(batCapWh, Math.max(0, socWh));
                     }
                 }
-                return {
-                    totalSavings: totalGridSaving + totalExportRevenue, exportRevenue: totalExportRevenue,
-                    sc: ((totalDirectWh + (totalBattYieldWh / 0.95)) / (totalSolarProdWh || 1)) * 100,
-                    ss: ((totalDirectWh + totalBattYieldWh) / (totalLoadWh || 1)) * 100, wasted: totalWastedWh / 1000
-                };
+                return { totalSavings: totalGridSaving + totalExportRevenue, exportRevenue: totalExportRevenue, sc: ((totalDirectWh + (totalBattYieldWh / 0.95)) / (totalSolarProdWh || 1)) * 100, ss: ((totalDirectWh + totalBattYieldWh) / (totalLoadWh || 1)) * 100, wasted: totalWastedWh / 1000 };
             };
 
             const simResults = computed(() => options.value.map(opt => runSimulation(opt)));
@@ -272,7 +276,7 @@
 
             return {
                 meterType, exportMode, rateFlat, ratePeak, rateOff, exportRate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, simResults, isRendering, calculatePayback, isSlotActive,
-                addOption: () => options.value.push({ title: 'PLAN ' + (options.value.length + 1), solarKw: 5, batteryKwh: 0, cost: 200000 }),
+                addOption: () => options.value.push({ title: 'PLAN ' + (options.value.length + 1), desc: '', solarKw: 5, batteryKwh: 0, cost: 200000 }),
                 removeOption: (idx) => options.value.splice(idx, 1),
                 addEmptyAppliance: () => { appliances.value.push({ id: genId(), name: 'New Device', type: 'watt', power: 1000, days: 30, active: true, slots: [9,10,11,12,13,14,15] }); nextTick(() => initSortable()); },
                 removeAppliance: (idx) => appliances.value.splice(idx, 1),
