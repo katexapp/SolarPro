@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.36.4 - Dashboard Control</title>
+    <title>Solar Pro V.36.4.1 - Fixed Options Save</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -30,8 +30,8 @@
         
         <div class="flex justify-between items-center no-print">
             <div class="flex flex-col">
-                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.36.4</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Control Center & Physics Engine</span>
+                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.36.4.1</h1>
+                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Fixed Options Save</span>
             </div>
             <div class="flex gap-2">
                 <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
@@ -184,8 +184,11 @@
                 if (!bestData) { HISTORIC_KEYS.forEach(k => { const raw = localStorage.getItem(k); if (raw && (!bestData || JSON.parse(raw).appliances?.length > JSON.parse(bestData).appliances?.length)) bestData = raw; }); }
                 if (bestData) { 
                     try { 
-                        const p = JSON.parse(bestData); meterType.value = p.meterType || 'Residential'; exportMode.value = p.exportMode || 'Export';
+                        const p = JSON.parse(bestData); 
+                        meterType.value = p.meterType || 'Residential'; exportMode.value = p.exportMode || 'Export';
                         rateFlat.value = p.rateFlat || 4.70; ratePeak.value = p.ratePeak || 5.80; rateOff.value = p.rateOff || 2.65; exportRate.value = p.exportRate || 2.20;
+                        // 🎯 แก้ให้ดึง Options เก่ามาด้วย
+                        if (p.options && p.options.length > 0) options.value = p.options;
                         appliances.value = (p.appliances || []).map(a => ({...a, slots: Array.isArray(a.slots) ? a.slots : []})); 
                     } catch(e) {} 
                 }
