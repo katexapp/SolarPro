@@ -31,7 +31,7 @@
         <div class="flex justify-between items-center no-print">
             <div class="flex flex-col text-left">
                 <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.36.4.4</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest">Locked Structure | Day-Night Ratio Added</span>
+                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest">Locked Structure | Wealth Report Added</span>
             </div>
             <div class="flex gap-2">
                 <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
@@ -64,13 +64,45 @@
                 </div>
             </div>
 
+            <div class="bg-indigo-900 rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden border-b-8 border-indigo-500">
+                <h3 class="text-xs font-black text-indigo-300 uppercase tracking-[0.2em] mb-6 italic">25-Year Cumulative Profit & Wealth Matrix</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    <div v-for="(res, idx) in simResults" :key="'wealth-'+idx" class="bg-white/5 p-6 rounded-3xl border border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-[10px] font-black text-indigo-400 uppercase tracking-tighter">{{ options[idx].title }}</span>
+                                <div class="text-3xl font-black text-emerald-400 italic">฿{{ formatNumber(calculateWealth(res.totalSavings, options[idx].cost).netProfit) }}</div>
+                                <p class="text-[9px] font-bold uppercase opacity-60">Total Net Profit (25Y)</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] font-black text-orange-400 uppercase">Annual ROI</span>
+                                <div class="text-2xl font-black">{{ calculateWealth(res.totalSavings, options[idx].cost).annualRoi }}%</div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 border-t border-white/10 pt-4">
+                            <div class="text-center">
+                                <p class="text-[8px] opacity-50 uppercase font-black text-indigo-300">Y1-5</p>
+                                <p class="text-[11px] font-bold italic">฿{{ formatNumber(calculateWealth(res.totalSavings, options[idx].cost).y5) }}</p>
+                            </div>
+                            <div class="text-center border-x border-white/10">
+                                <p class="text-[8px] opacity-50 uppercase font-black text-indigo-300">Y1-15</p>
+                                <p class="text-[11px] font-bold text-emerald-300 italic">฿{{ formatNumber(calculateWealth(res.totalSavings, options[idx].cost).y15) }}</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-[8px] opacity-50 uppercase font-black text-indigo-300">Y1-25</p>
+                                <p class="text-[11px] font-bold italic">฿{{ formatNumber(calculateWealth(res.totalSavings, options[idx].cost).y25) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white relative overflow-hidden">
                 <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em] mb-3 italic">Confirmed Monthly Gross Baseline ({{ meterType }})</p>
                 <div class="flex justify-center items-baseline gap-2 mb-6">
                     <span class="text-6xl font-black italic">฿{{ formatNumber(totalGrossCost) }}</span>
                     <span class="text-slate-500 font-bold uppercase text-sm">/ Month</span>
                 </div>
-                
                 <div class="max-w-md mx-auto">
                     <div class="flex justify-between text-[10px] font-black uppercase mb-1.5 tracking-widest">
                         <span class="text-indigo-400">☀️ Day Use: {{ dayRatio }}%</span>
@@ -104,7 +136,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-3xl shadow-xl p-8 overflow-x-auto text-center text-left text-left">
+            <div class="bg-white rounded-3xl shadow-xl p-8 overflow-x-auto text-left">
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="text-[10px] text-slate-400 uppercase font-black border-b">
@@ -129,14 +161,14 @@
 
             <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden text-left">
                 <table class="w-full text-left text-sm table-fixed">
-                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left text-left text-left">
-                        <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%] text-center">Spec</th><th class="p-5 text-center w-[30%] text-center">Schedule</th><th class="p-5 text-center w-[10%] text-center">Days</th><th class="p-5 text-right w-[20%] text-right">Cost/Mo.</th></tr>
+                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left">
+                        <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%]">Spec</th><th class="p-5 text-center w-[30%] text-center">Schedule</th><th class="p-5 text-center w-[10%]">Days</th><th class="p-5 text-right w-[20%] text-right">Cost/Mo.</th></tr>
                     </thead>
                     <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left">
                         <tr v-for="(item, idx) in appliances" :key="item.id" :class="item.active === false ? 'opacity-30' : ''">
-                            <td class="p-5 text-left"><div class="flex items-center gap-2"><span class="no-render drag-handle text-lg text-left text-left">⠿</span>
+                            <td class="p-5 text-left"><div class="flex items-center gap-2"><span class="no-render drag-handle text-lg">⠿</span>
                                 <button @click="item.active = !item.active" class="no-render text-lg leading-none">{{ item.active !== false ? '☀️' : '🌑' }}</button>
-                                <span class="font-black text-indigo-700 uppercase tracking-tight truncate text-left">{{ item.name }}</span></div></td>
+                                <span class="font-black text-indigo-700 uppercase tracking-tight truncate">{{ item.name }}</span></div></td>
                             <td class="p-5 text-center text-[10px] whitespace-nowrap text-center">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase">{{ item.type.includes('ac') ? 'BTU' : 'W' }}</span></td>
                             <td class="p-5 text-center"><div class="flex gap-[2px] justify-center items-center"><div v-for="h in 24" :key="h-1" class="mini-dot" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
                             <td class="p-5 text-center font-black text-emerald-600 text-center">{{ item.days }}</td>
@@ -149,19 +181,19 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left text-left">
+        <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left">
             <h3 class="font-black text-lg text-indigo-900 uppercase italic border-b pb-4 text-left">⚙️ Unit Configuration</h3>
             <div class="space-y-4">
                 <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all text-left">
                     <div class="lg:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
-                        <div class="col-span-2 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
-                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
-                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm"></div>
-                        <div class="col-span-4 text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
+                        <div class="col-span-2 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
+                        <div class="text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
+                        <div class="text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm"></div>
+                        <div class="col-span-4 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
                     </div>
-                    <div class="lg:col-span-7 flex flex-col gap-4 text-left text-left">
+                    <div class="lg:col-span-7 flex flex-col gap-4 text-left">
                         <div class="flex justify-between items-center px-1 text-left">
-                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic text-left">Timeline Pattern</span>
+                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic">Timeline Pattern</span>
                             <div class="flex gap-2">
                                 <button @click="applyPreset(item, '24h')" class="bg-indigo-600 text-white text-[9px] font-black px-4 py-2 rounded-lg uppercase shadow-sm">24h</button>
                                 <button @click="applyPreset(item, 'day')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Day</button>
@@ -171,10 +203,10 @@
                         <div class="jumbo-slot-grid text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left">{{ h-1 }}</div></div>
                     </div>
                 </div>
-                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center text-left text-left">+ REGISTER NEW SYSTEM DEVICE</button>
+                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center">+ REGISTER NEW SYSTEM DEVICE</button>
             </div>
         </div>
-        <div class="pt-10 flex justify-center no-print text-center"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em] text-center">⚠️ Purge All Storage</button></div>
+        <div class="pt-10 flex justify-center no-print text-center"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em]">⚠️ Purge All Storage</button></div>
     </div>
 
 <script>
@@ -239,7 +271,6 @@
 
             const totalGrossCost = computed(() => appliances.value.reduce((sum, i) => sum + getItemGrossCost(i), 0));
 
-            // 🎯 คำนวณสัดส่วน กลางวัน / กลางคืน
             const dayRatio = computed(() => {
                 let dayLoad = 0; let nightLoad = 0;
                 appliances.value.forEach(i => {
@@ -297,327 +328,22 @@
             const simResults = computed(() => options.value.map(opt => runSimulation(opt)));
             const calculatePayback = (opt, monthlySavings) => { const yearly = monthlySavings * 12; return yearly > 0 ? (opt.cost / yearly).toFixed(1) : 'N/A'; };
 
-            return {
-                meterType, exportMode, rateFlat, ratePeak, rateOff, exportRate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, simResults, isRendering, calculatePayback, isSlotActive, dayRatio, nightRatio,
-                addOption: () => options.value.push({ title: 'PLAN ' + (options.value.length + 1), desc: '', solarKw: 5, batteryKwh: 0, cost: 200000 }),
-                removeOption: (idx) => options.value.splice(idx, 1),
-                addEmptyAppliance: () => { appliances.value.push({ id: genId(), name: 'New Device', type: 'watt', power: 1000, days: 30, active: true, slots: [9,10,11,12,13,14,15] }); nextTick(() => initSortable()); },
-                removeAppliance: (idx) => appliances.value.splice(idx, 1),
-                toggleSlot: (item, h) => { if(!item.slots) item.slots = []; const sIdx = item.slots.indexOf(h); if(sIdx > -1) item.slots.splice(sIdx, 1); else item.slots.push(h); },
-                applyPreset: (item, type) => {
-                    if(type==='24h') item.slots = Array.from({length:24},(_,h)=>h);
-                    else if(type==='day') item.slots = [8,9,10,11,12,13,14,15,16,17];
-                    else if(type==='night') item.slots = [19,20,21,22,23,0,1,2,3,4,5,6];
-                },
-                handlePrint: () => { isRendering.value = true; nextTick(() => { window.print(); isRendering.value = false; }); },
-                saveAsImage: () => { isRendering.value = true; nextTick(() => { html2canvas(document.getElementById('full-report-area'), { scale: 3 }).then(cv => { const l=document.createElement('a'); l.download='SolarPro_Dashboard_V36.jpg'; l.href=cv.toDataURL('image/jpeg'); l.click(); isRendering.value = false; }); }, 500); },
-                resetApp: () => { if(confirm('Reset?')) { localStorage.removeItem(MASTER_KEY); location.reload(); } }
-            };
-        }
-    }).mount('#app');
-</script>
-</body>
-</html><!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.36.4.4 - Baseline Ratio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Prompt', sans-serif; background: #f8fafc; color: #1e293b; text-align: left; }
-        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; justify-content: center; align-items: center; }
-        .drag-handle { cursor: grab; padding: 8px; color: #cbd5e1; }
-        .jumbo-slot-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; width: 100%; }
-        .jumbo-btn { aspect-ratio: 1/1; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 10px; font-weight: 900; color: #94a3b8; background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .jumbo-btn.active { background: #6366f1 !important; color: white !important; }
-        .mini-dot { width: 4px; height: 10px; border-radius: 1px; background: #e2e8f0; }
-        .mini-dot.active { background: #6366f1; }
-        .is-rendering .no-render, .is-rendering .input-only { display: none !important; }
-        .display-only { display: none; } .is-rendering .display-only { display: block !important; }
-        .switch-btn { padding: 6px 16px; border-radius: 12px; font-size: 11px; font-weight: 900; text-transform: uppercase; transition: all 0.3s; border: 1px solid transparent; }
-        .switch-btn.active { background: white; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); color: #4338ca; }
-        .switch-btn.inactive { color: #94a3b8; }
-        [v-cloak] { display: none; }
-    </style>
-</head>
-<body class="p-4 md:p-8">
-    <div id="app" v-cloak class="max-w-6xl mx-auto space-y-6 pb-20 text-left">
-        
-        <div class="flex justify-between items-center no-print">
-            <div class="flex flex-col text-left">
-                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.36.4.4</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest">Locked Structure | Day-Night Ratio Added</span>
-            </div>
-            <div class="flex gap-2">
-                <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
-                <button @click="handlePrint" class="bg-slate-700 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg flex items-center gap-2"><span>🖨️</span> PRINT</button>
-            </div>
-        </div>
-
-        <div id="full-report-area" :class="{'is-rendering': isRendering}" class="p-8 space-y-6 bg-slate-100 rounded-[40px] border border-slate-200 shadow-inner text-left">
-            
-            <div class="bg-white rounded-3xl shadow-xl p-8 border-t-8 border-slate-900">
-                <div class="flex justify-between items-center mb-6 no-print border-b pb-2">
-                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest italic">System Design Configuration</h2>
-                    <button @click="addOption" class="bg-indigo-50 text-indigo-600 text-[10px] font-black px-4 py-2 rounded-full hover:bg-indigo-100">+ NEW OPTION</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative text-left">
-                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print shadow-md font-black">✕</button>
-                        <div class="mb-4">
-                            <input v-model="opt.title" class="input-only w-full text-center text-xs font-black text-indigo-700 uppercase bg-transparent border-b border-dashed border-indigo-100 focus:outline-none" placeholder="ชื่อ OPTION">
-                            <div class="display-only text-xs font-black text-indigo-700 uppercase text-center">{{ opt.title }}</div>
-                            <input v-model="opt.desc" class="input-only w-full text-center text-[10px] font-bold text-slate-400 bg-transparent border-b border-dashed border-slate-200 focus:outline-none mt-1" placeholder="รายละเอียดแผน">
-                            <div class="display-only text-[9px] font-bold text-slate-400 text-center italic mt-0.5">{{ opt.desc }}</div>
-                        </div>
-                        <div class="space-y-2 text-left">
-                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">Solar Array</label><input type="number" v-model="opt.solarKw" class="input-only w-16 text-right font-black text-indigo-600 bg-transparent"><span class="display-only font-black text-indigo-600">{{ opt.solarKw }} kWp</span></div>
-                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">ESS Storage</label><input type="number" v-model="opt.batteryKwh" class="input-only w-16 text-right font-black text-purple-600 bg-transparent"><span class="display-only font-black text-purple-600">{{ opt.batteryKwh }} kWh</span></div>
-                            <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-50"><label class="text-[9px] font-bold text-slate-400 uppercase">Investment</label><input type="number" v-model="opt.cost" class="input-only w-24 text-right font-black text-emerald-600 bg-transparent"><span class="display-only font-black text-emerald-600">฿{{ formatNumber(opt.cost) }}</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white relative overflow-hidden">
-                <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em] mb-3 italic">Confirmed Monthly Gross Baseline ({{ meterType }})</p>
-                <div class="flex justify-center items-baseline gap-2 mb-6">
-                    <span class="text-6xl font-black italic">฿{{ formatNumber(totalGrossCost) }}</span>
-                    <span class="text-slate-500 font-bold uppercase text-sm">/ Month</span>
-                </div>
-                
-                <div class="max-w-md mx-auto">
-                    <div class="flex justify-between text-[10px] font-black uppercase mb-1.5 tracking-widest">
-                        <span class="text-indigo-400">☀️ Day Use: {{ dayRatio }}%</span>
-                        <span class="text-slate-400">🌙 Night Use: {{ nightRatio }}%</span>
-                    </div>
-                    <div class="w-full h-1.5 bg-slate-800 rounded-full flex overflow-hidden">
-                        <div class="h-full bg-indigo-500 transition-all duration-500" :style="{width: dayRatio + '%'}"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-3xl shadow-xl p-6 border-l-8 border-indigo-500 flex flex-wrap items-center gap-8 no-print text-left">
-                <div class="flex flex-col gap-2">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Meter Tariff Selection</span>
-                    <div class="flex p-1 bg-slate-100 rounded-2xl w-fit shadow-inner">
-                        <button @click="meterType = 'Residential'" :class="meterType === 'Residential' ? 'active' : 'inactive'" class="switch-btn">Residential</button>
-                        <button @click="meterType = 'TOU'" :class="meterType === 'TOU' ? 'active' : 'inactive'" class="switch-btn">TOU Meter</button>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Grid Export Strategy</span>
-                    <div class="flex p-1 bg-slate-100 rounded-2xl w-fit shadow-inner">
-                        <button @click="exportMode = 'Export'" :class="exportMode === 'Export' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Export (ขายไฟ)</button>
-                        <button @click="exportMode = 'NoExport'" :class="exportMode === 'NoExport' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Zero Export</button>
-                    </div>
-                </div>
-                <div class="flex flex-wrap gap-6 items-center border-l pl-8 ml-auto">
-                    <div v-if="meterType === 'Residential'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">Standard Rate</label><input type="number" v-model="rateFlat" step="0.01" class="w-16 font-black text-indigo-600 bg-transparent text-sm"></div>
-                    <div v-if="meterType === 'TOU'" class="flex gap-4 text-left"><div class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Peak</label><input type="number" v-model="ratePeak" step="0.01" class="w-16 font-black text-orange-600 bg-transparent text-sm"></div><div class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Off-Peak</label><input type="number" v-model="rateOff" step="0.01" class="w-16 font-black text-blue-600 bg-transparent text-sm"></div></div>
-                    <div v-if="exportMode === 'Export'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">FIT Rate</label><input type="number" v-model="exportRate" step="0.01" class="w-16 font-black text-emerald-600 bg-transparent text-sm"></div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-3xl shadow-xl p-8 overflow-x-auto text-center text-left text-left">
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="text-[10px] text-slate-400 uppercase font-black border-b">
-                            <th class="p-4 text-left border-b w-[22%]">ROI Performance Analysis</th>
-                            <th v-for="opt in options" class="p-4 border-b font-black text-indigo-700 uppercase italic text-center">
-                                <div class="flex flex-col text-center">
-                                    <span>{{ opt.title }}</span>
-                                    <span class="text-[8px] text-slate-400 not-italic font-bold tracking-tight">{{ opt.desc }}</span>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm font-bold text-left">
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500 text-left">Monthly Net Savings</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-emerald-600 text-2xl font-black text-center">฿{{ formatNumber(res.totalSavings) }}</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500 text-left">Self-Sufficiency</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center">{{ res.ss.toFixed(1) }}%</td></tr>
-                        <tr class="border-b border-slate-50 text-slate-400"><td class="p-4 text-left text-[10px] uppercase italic text-left">{{ exportMode === 'Export' ? 'Grid Export' : 'Energy Wasted' }}</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-xs text-center" :class="exportMode === 'Export' ? 'text-blue-500 font-bold' : 'text-red-400'">{{ exportMode === 'Export' ? '+฿'+formatNumber(res.exportRevenue) : res.wasted.toFixed(1) + ' kWh' }}</td></tr>
-                        <tr class="border-b border-slate-50 bg-slate-50/50"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black text-left">Final Monthly Pay</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center">฿{{ formatNumber(totalGrossCost - res.totalSavings) }}</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500 text-left">ROI: Payback Period</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-orange-500 text-xl font-black text-center">{{ calculatePayback(options[idx], res.totalSavings) }} Years</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden text-left">
-                <table class="w-full text-left text-sm table-fixed">
-                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left text-left text-left">
-                        <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%] text-center">Spec</th><th class="p-5 text-center w-[30%] text-center">Schedule</th><th class="p-5 text-center w-[10%] text-center">Days</th><th class="p-5 text-right w-[20%] text-right">Cost/Mo.</th></tr>
-                    </thead>
-                    <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left">
-                        <tr v-for="(item, idx) in appliances" :key="item.id" :class="item.active === false ? 'opacity-30' : ''">
-                            <td class="p-5 text-left"><div class="flex items-center gap-2"><span class="no-render drag-handle text-lg text-left text-left">⠿</span>
-                                <button @click="item.active = !item.active" class="no-render text-lg leading-none">{{ item.active !== false ? '☀️' : '🌑' }}</button>
-                                <span class="font-black text-indigo-700 uppercase tracking-tight truncate text-left">{{ item.name }}</span></div></td>
-                            <td class="p-5 text-center text-[10px] whitespace-nowrap text-center">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase">{{ item.type.includes('ac') ? 'BTU' : 'W' }}</span></td>
-                            <td class="p-5 text-center"><div class="flex gap-[2px] justify-center items-center"><div v-for="h in 24" :key="h-1" class="mini-dot" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
-                            <td class="p-5 text-center font-black text-emerald-600 text-center">{{ item.days }}</td>
-                            <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10 text-right">฿{{ formatNumber(getItemGrossCost(item)) }}
-                                <button @click="removeAppliance(idx)" class="no-render absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-200 hover:text-red-500 transition-colors">🗑️</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left text-left">
-            <h3 class="font-black text-lg text-indigo-900 uppercase italic border-b pb-4 text-left">⚙️ Unit Configuration</h3>
-            <div class="space-y-4">
-                <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all text-left">
-                    <div class="lg:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
-                        <div class="col-span-2 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
-                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
-                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm"></div>
-                        <div class="col-span-4 text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
-                    </div>
-                    <div class="lg:col-span-7 flex flex-col gap-4 text-left text-left">
-                        <div class="flex justify-between items-center px-1 text-left">
-                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic text-left">Timeline Pattern</span>
-                            <div class="flex gap-2">
-                                <button @click="applyPreset(item, '24h')" class="bg-indigo-600 text-white text-[9px] font-black px-4 py-2 rounded-lg uppercase shadow-sm">24h</button>
-                                <button @click="applyPreset(item, 'day')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Day</button>
-                                <button @click="applyPreset(item, 'night')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Night</button>
-                            </div>
-                        </div>
-                        <div class="jumbo-slot-grid text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left">{{ h-1 }}</div></div>
-                    </div>
-                </div>
-                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center text-left text-left">+ REGISTER NEW SYSTEM DEVICE</button>
-            </div>
-        </div>
-        <div class="pt-10 flex justify-center no-print text-center"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em] text-center">⚠️ Purge All Storage</button></div>
-    </div>
-
-<script>
-    const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
-    const MASTER_KEY = 'SOLAR_PRO_V36_UTILITY';
-    const HISTORIC_KEYS = ['SOLAR_PRO_V35_ENTERPRISE', 'SOLAR_PRO_MASTER_DATA', 'SOLAR_PRO_V30_SaaS'];
-
-    createApp({
-        setup() {
-            const meterType = ref('Residential'); const exportMode = ref('Export');
-            const rateFlat = ref(4.70); const ratePeak = ref(5.80); const rateOff = ref(2.65); const exportRate = ref(2.20);
-            const isRendering = ref(false);
-            const options = ref([{ title: 'PLAN A', desc: '', solarKw: 5.0, batteryKwh: 5.0, cost: 220000 }, { title: 'PLAN B', desc: '', solarKw: 10.0, batteryKwh: 10.0, cost: 410000 }]);
-            const appliances = ref([]); 
-            const genId = () => Math.random().toString(36).substr(2, 9) + Date.now();
-
-            const isSlotActive = (item, h) => (item.slots || []).includes(h);
-            const formatNumber = (n) => Math.round(n || 0).toLocaleString();
-
-            const initSortable = () => {
-                const el = document.getElementById('appliance-list-body');
-                if (el) Sortable.create(el, { handle: '.drag-handle', animation: 150, onEnd: (evt) => { const list = [...appliances.value]; const item = list.splice(evt.oldIndex, 1)[0]; list.splice(evt.newIndex, 0, item); appliances.value = list; }});
-            };
-
-            onMounted(() => {
-                let bestData = localStorage.getItem(MASTER_KEY);
-                if (!bestData) { HISTORIC_KEYS.forEach(k => { const raw = localStorage.getItem(k); if (raw && (!bestData || JSON.parse(raw).appliances?.length > JSON.parse(bestData).appliances?.length)) bestData = raw; }); }
-                if (bestData) { 
-                    try { 
-                        const p = JSON.parse(bestData); meterType.value = p.meterType || 'Residential'; exportMode.value = p.exportMode || 'Export';
-                        rateFlat.value = p.rateFlat || 4.70; ratePeak.value = p.ratePeak || 5.80; rateOff.value = p.rateOff || 2.65; exportRate.value = p.exportRate || 2.20;
-                        if (p.options && p.options.length > 0) options.value = p.options;
-                        appliances.value = (p.appliances || []).map(a => ({...a, active: a.active !== false, slots: Array.isArray(a.slots) ? a.slots : []})); 
-                    } catch(e) {} 
+            const calculateWealth = (monthlySaving, cost) => {
+                let annual = monthlySaving * 12;
+                let y5 = 0, y15 = 0, y25 = 0;
+                for(let i=0; i<25; i++) {
+                    let cur = annual * Math.pow(0.995, i); // Degradation 0.5%
+                    if(i < 5) y5 += cur;
+                    if(i < 15) y15 += cur;
+                    y25 += cur;
                 }
-                if (appliances.value.length === 0) appliances.value = [{ id: genId(), name: 'Main AC Inverter', type: 'ac_inverter', power: 12000, days: 30, active: true, slots: [9,10,11,12,13,14,15] }];
-                nextTick(() => initSortable());
-            });
-
-            watch([meterType, exportMode, rateFlat, ratePeak, rateOff, exportRate, options, appliances], () => { 
-                localStorage.setItem(MASTER_KEY, JSON.stringify({ meterType: meterType.value, exportMode: exportMode.value, rateFlat: rateFlat.value, ratePeak: ratePeak.value, rateOff: rateOff.value, exportRate: exportRate.value, options: options.value, appliances: appliances.value })); 
-            }, { deep: true });
-
-            const getDeviceWattage = (i) => {
-                if (i.active === false) return 0;
-                if (i.type === 'ac_inverter') return (i.power / 25) * 0.6;
-                if (i.type === 'ac_standard') return (i.power / 15) * 0.8;
-                if (i.type === 'fridge') return (i.power * 0.4);
-                if (i.type === 'computer') return (i.power * 0.5);
-                return i.power; 
+                const netProfit = y25 - cost - 35000; // หักทุน + สำรองเปลี่ยน Inverter
+                const annualRoi = ((netProfit / cost) / 25 * 100).toFixed(1);
+                return { y5, y15, y25, netProfit, annualRoi };
             };
-
-            const getItemGrossCost = (i) => {
-                if (i.active === false) return 0;
-                let monthlyCost = 0; const watts = getDeviceWattage(i);
-                (i.slots || []).forEach(h => {
-                    let curRate = meterType.value === 'TOU' ? ((h >= 9 && h < 22) ? ratePeak.value : rateOff.value) : rateFlat.value;
-                    monthlyCost += (watts / 1000) * i.days * curRate;
-                });
-                return monthlyCost;
-            };
-
-            const totalGrossCost = computed(() => appliances.value.reduce((sum, i) => sum + getItemGrossCost(i), 0));
-
-            // 🎯 คำนวณสัดส่วน กลางวัน / กลางคืน
-            const dayRatio = computed(() => {
-                let dayLoad = 0; let nightLoad = 0;
-                appliances.value.forEach(i => {
-                    if (i.active === false) return;
-                    const w = getDeviceWattage(i);
-                    (i.slots || []).forEach(h => {
-                        if (h >= 6 && h < 18) dayLoad += w;
-                        else nightLoad += w;
-                    });
-                });
-                const total = dayLoad + nightLoad;
-                return total > 0 ? Math.round((dayLoad / total) * 100) : 0;
-            });
-            const nightRatio = computed(() => 100 - dayRatio.value);
-
-            const runSimulation = (opt) => {
-                let totalSolarProdWh = 0; let totalLoadWh = 0; let totalDirectWh = 0; let totalBattYieldWh = 0;
-                let totalExportRevenue = 0; let totalGridSaving = 0; let totalWastedWh = 0;
-                const dt = 0.25; const steps = 96; const batCapWh = opt.batteryKwh * 1000;
-                const maxRateWh = batCapWh * 0.5 * dt; 
-
-                for (let d = 1; d <= 30; d++) {
-                    let socWh = batCapWh * 0.5; 
-                    for (let s = 0; s < steps; s++) {
-                        const h = Math.floor(s * dt);
-                        let curRate = meterType.value === 'TOU' ? ((h >= 9 && h < 22) ? ratePeak.value : rateOff.value) : rateFlat.value;
-                        const yieldFactor = (h < 6 || h > 18.5) ? 0 : Math.pow(Math.sin(((h - 6) / 12.5) * Math.PI), 1.2) * (h > 13 ? 0.92 : 1.0);
-                        const stepSolarWh = (opt.solarKw * 1000 * 0.98) * yieldFactor * dt;
-                        const noise = 0.9 + ((h * 13 + d * 7) % 20) / 100;
-                        let stepLoadWh = 0;
-                        appliances.value.forEach(i => { if (i.active !== false && isSlotActive(i, h) && i.days >= d) stepLoadWh += (getDeviceWattage(i) * dt * noise); });
-                        totalSolarProdWh += stepSolarWh; totalLoadWh += stepLoadWh;
-
-                        if (stepSolarWh >= stepLoadWh) {
-                            totalDirectWh += stepLoadWh; totalGridSaving += (stepLoadWh / 1000) * curRate;
-                            const surplus = stepSolarWh - stepLoadWh;
-                            const chargeAmount = Math.min(surplus, maxRateWh, (batCapWh - socWh) / 0.95);
-                            socWh += (chargeAmount * 0.95);
-                            if (exportMode.value === 'Export') totalExportRevenue += ((surplus - chargeAmount) / 1000) * exportRate.value;
-                            else totalWastedWh += (surplus - chargeAmount);
-                        } else {
-                            totalDirectWh += stepSolarWh; totalGridSaving += (stepSolarWh / 1000) * curRate;
-                            const deficit = stepLoadWh - stepSolarWh;
-                            const dischargeAmount = Math.min(deficit, maxRateWh, socWh);
-                            totalBattYieldWh += (dischargeAmount * 0.95);
-                            totalGridSaving += ((dischargeAmount * 0.95) / 1000) * curRate;
-                            socWh -= dischargeAmount;
-                        }
-                        socWh = Math.min(batCapWh, Math.max(0, socWh));
-                    }
-                }
-                return { totalSavings: totalGridSaving + totalExportRevenue, exportRevenue: totalExportRevenue, sc: ((totalDirectWh + (totalBattYieldWh / 0.95)) / (totalSolarProdWh || 1)) * 100, ss: ((totalDirectWh + totalBattYieldWh) / (totalLoadWh || 1)) * 100, wasted: totalWastedWh / 1000 };
-            };
-
-            const simResults = computed(() => options.value.map(opt => runSimulation(opt)));
-            const calculatePayback = (opt, monthlySavings) => { const yearly = monthlySavings * 12; return yearly > 0 ? (opt.cost / yearly).toFixed(1) : 'N/A'; };
 
             return {
-                meterType, exportMode, rateFlat, ratePeak, rateOff, exportRate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, simResults, isRendering, calculatePayback, isSlotActive, dayRatio, nightRatio,
+                meterType, exportMode, rateFlat, ratePeak, rateOff, exportRate, options, appliances, formatNumber, totalGrossCost, getItemGrossCost, simResults, isRendering, calculatePayback, isSlotActive, dayRatio, nightRatio, calculateWealth,
                 addOption: () => options.value.push({ title: 'PLAN ' + (options.value.length + 1), desc: '', solarKw: 5, batteryKwh: 0, cost: 200000 }),
                 removeOption: (idx) => options.value.splice(idx, 1),
                 addEmptyAppliance: () => { appliances.value.push({ id: genId(), name: 'New Device', type: 'watt', power: 1000, days: 30, active: true, slots: [9,10,11,12,13,14,15] }); nextTick(() => initSortable()); },
