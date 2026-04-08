@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.39.11.0 - The Final Master</title>
+    <title>Solar Pro V.39.14.0 - Final Master LOCKED</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -24,17 +24,17 @@
         .switch-btn.active { background: white; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); color: #4338ca; }
         .switch-btn.inactive { color: #94a3b8; }
         [v-cloak] { display: none; }
-        .card-note { margin-top: 12px; padding: 8px 12px; background: rgba(255,255,255,0.5); border-radius: 8px; font-size: 10px; line-height: 1.4; color: #64748b; border-left: 3px solid #cbd5e1; text-align: left; }
+        .card-note { margin-top: 12px; padding: 8px 12px; background: rgba(255,255,255,0.5); border-radius: 8px; font-size: 10px; line-height: 1.4; color: #64748b; border-left: 3px solid #cbd5e1; text-left: left; }
         .bg-indigo-900 .card-note { background: rgba(255,255,255,0.05); color: #a5b4fc; border-left-color: #6366f1; }
     </style>
 </head>
 <body class="p-4 md:p-8 text-left">
     <div id="app" v-cloak class="max-w-6xl mx-auto space-y-6 pb-20">
         
-        <div class="flex justify-between items-center no-print">
+        <div class="flex justify-between items-center no-print text-left">
             <div class="flex flex-col text-left">
-                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.11.0</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">The Final Master | Baseline & Logic LOCKED</span>
+                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.14.0</h1>
+                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Final Master | Full Image-Matched Notes | Logic LOCKED</span>
             </div>
             <div class="flex gap-2">
                 <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div v-for="(opt, idx) in options" :key="idx" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 relative text-left">
-                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print shadow-md font-black">✕</button>
+                        <button v-if="options.length > 1" @click="removeOption(idx)" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-[10px] no-print shadow-md font-black text-left">✕</button>
                         <div class="mb-4">
                             <input v-model="opt.title" class="input-only w-full text-left text-xs font-black text-indigo-700 uppercase bg-transparent border-b border-dashed border-indigo-100 focus:outline-none">
                             <div class="display-only text-xs font-black text-indigo-700 uppercase text-left">{{ opt.title }}</div>
@@ -65,6 +65,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-note"><strong>Note:</strong> ส่วนนี้ใช้กำหนดขนาดระบบ (กิโลวัตต์) และความจุแบตเตอรี่ เพื่อเปรียบเทียบความคุ้มค่าระหว่างแผนที่ติดตั้งโซลาร์เซลล์ที่ขนาดแตกต่างกัน</div>
             </div>
 
             <div class="bg-indigo-900 rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden border-b-8 border-indigo-500 text-left">
@@ -81,13 +82,13 @@
                         <input type="number" v-model="targetYear" min="1" max="50" class="bg-indigo-800 text-white font-black text-sm w-12 text-center rounded focus:outline-none">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 text-left">
                     <div v-for="(res, idx) in simResults" :key="'wealth-'+idx" class="bg-white/5 p-6 rounded-3xl border border-white/10 text-left">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <span class="text-[10px] font-black text-indigo-400 uppercase tracking-tighter">{{ options[idx].title }}</span>
                                 <div class="text-3xl font-black text-emerald-400 italic">฿{{ formatNumber(calculateWealth(res.totalSavings, options[idx]).netProfitAtTarget) }}</div>
-                                <p class="text-[9px] font-bold uppercase opacity-60">Net Profit Generated (@ Year {{ targetYear }})</p>
+                                <p class="text-[9px] font-bold uppercase opacity-60 text-left">Net Profit Generated (@ Year {{ targetYear }})</p>
                             </div>
                             <div class="text-right">
                                 <span class="text-[9px] font-black text-orange-400 uppercase tracking-widest">{{ calcMode === 'Investor' ? 'Investor IRR' : 'Simple ROI/Y' }}</span>
@@ -102,7 +103,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-note"><strong>Note:</strong> กำไรสะสมหักทุนคืนแล้ว Investor จะคิดรวมเงินเฟ้อค่าไฟและแผงเสื่อมสภาพ</div>
+                <div class="card-note">
+                    <strong>Note:</strong> แสดงผลกำไรสุทธิสะสม (หักทุนและค่าบำรุงรักษา Inverter/Battery แล้ว)<br>
+                    - <strong>Standard:</strong> คำนวณแบบเงินต้นเดิม ไม่รวมปัจจัยภายนอก<br>
+                    - <strong>Investor:</strong> คำนวณแบบนักลงทุน (รวมค่าเงินเฟ้อค่าไฟเพิ่มขึ้น 3%/ปี, แผงเสื่อมสภาพ 0.5%/ปี และค่าซ่อมบำรุงอุปกรณ์ตามรอบปี)
+                </div>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl p-8 border-l-8 border-indigo-600 text-left">
@@ -115,7 +120,7 @@
                 <div class="h-[300px] w-full relative">
                     <canvas id="dailyEnergyChart"></canvas>
                 </div>
-                <div class="card-note mt-6"><strong>Note:</strong> กราฟ 24 ชม. แสดงการผลิตและแบตเตอรี่ (SOC %) แบบ Reality Check (ยกยอดต่อเนื่องและหยุดจ่ายเมื่อถึง Safety Limit)</div>
+                <div class="card-note mt-6 text-left"><strong>Note:</strong> กราฟการผลิตและแบตเตอรี่ (SOC %) แบบ Reality Check (หยุดจ่ายไฟเมื่อถึง Safety Reserve)</div>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl p-8 overflow-x-auto text-left">
@@ -134,7 +139,12 @@
                         <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">ROI: Payback Period</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center">{{ calculateWealth(res.totalSavings, options[idx]).paybackDecimal }} Years</td></tr>
                     </tbody>
                 </table>
-                <div class="card-note"><strong>Note:</strong> Self-Sufficiency คือสัดส่วนการพึ่งพาพลังงานตัวเอง ส่วน Energy Wasted คือไฟผลิตทิ้ง</div>
+                <div class="card-note">
+                    <strong>Note:</strong> ตัวบ่งชี้ความคุ้มค่าระดับเทคนิค<br>
+                    - <strong>Self-Sufficiency:</strong> สัดส่วนการลดการพึ่งพาไฟฟ้าจากสายส่ง (ยิ่งสูง ระบบยิ่งช่วยประหยัดไฟบ้านได้มาก)<br>
+                    - <strong>Energy Wasted:</strong> พลังงานจากแผงที่ผลิตได้แต่ไม่ได้ใช้และไม่ได้เก็บลงแบตเตอรี่ (ควรมีค่าต่ำที่สุดเพื่อความคุ้มค่า)<br>
+                    - <strong>Final Monthly Pay:</strong> ยอดบิลค่าไฟที่คุณต้องจ่ายให้การไฟฟ้าจริงต่อเดือนหลังหักส่วนลดจากโซลาร์แล้ว
+                </div>
             </div>
 
             <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white relative overflow-hidden text-left">
@@ -146,13 +156,15 @@
                 <div class="max-w-md mx-auto">
                     <div class="flex justify-between text-[10px] font-black uppercase mb-1.5 tracking-widest text-left">
                         <span class="text-indigo-400 text-left">☀️ Day Use: {{ dayRatio }}%</span>
-                        <span class="text-slate-400 text-right">🌙 Night Use: {{ nightRatio }}%</span>
+                        <span class="text-slate-400 text-right text-left">🌙 Night Use: {{ nightRatio }}%</span>
                     </div>
                     <div class="w-full h-1.5 bg-slate-800 rounded-full flex overflow-hidden">
                         <div class="h-full bg-indigo-500 transition-all duration-500" :style="{width: dayRatio + '%'}"></div>
                     </div>
                 </div>
-                <div class="card-note bg-white/5 border-l-indigo-400 mt-6 text-left"><strong>Note:</strong> ยอดค่าไฟเฉลี่ยรายเดือนปัจจุบันของคุณก่อนติดตั้งโซลาร์</div>
+                <div class="card-note bg-white/5 border-l-indigo-400 mt-6">
+                    <strong>Note:</strong> ยอดค่าไฟเฉลี่ยรายเดือนของคุณก่อนติดตั้งโซลาร์เซลล์ คำนวณจากประเภทมิเตอร์และจำนวนเครื่องใช้ไฟฟ้าที่คุณระบุไว้ด้านล่าง
+                </div>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl p-6 border-l-8 border-indigo-500 flex flex-wrap items-center gap-8 no-print text-left">
@@ -164,7 +176,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-2 text-left">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-left">Grid Export Strategy</span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-left text-left">Grid Export Strategy</span>
                     <div class="flex p-1 bg-slate-100 rounded-2xl w-fit shadow-inner">
                         <button @click="exportMode = 'Export'" :class="exportMode === 'Export' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Export (ขายไฟ)</button>
                         <button @click="exportMode = 'NoExport'" :class="exportMode === 'NoExport' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Zero Export</button>
@@ -173,6 +185,13 @@
                 <div class="flex flex-wrap gap-6 items-center border-l pl-8 ml-auto text-left">
                     <div v-if="meterType === 'Residential'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">Standard Rate</label><input type="number" v-model="rateFlat" step="0.01" class="w-16 font-black text-indigo-600 bg-transparent text-sm"></div>
                     <div v-if="meterType === 'TOU'" class="flex gap-4 text-left"><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Peak</label><input type="number" v-model="ratePeak" step="0.01" class="w-16 font-black text-orange-600 bg-transparent text-sm"></div><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Off-Peak</label><input type="number" v-model="rateOff" step="0.01" class="w-16 font-black text-blue-600 bg-transparent text-sm text-left"></div></div>
+                    <div v-if="exportMode === 'Export'" class="flex flex-col text-left text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left text-left">FIT Rate</label><input type="number" v-model="exportRate" step="0.01" class="w-16 font-black text-emerald-600 bg-transparent text-sm"></div>
+                </div>
+                <div class="w-full card-note">
+                    <strong>Note:</strong> กำหนดราคาไฟฟ้าและกลยุทธ์การเชื่อมต่อ<br>
+                    - <strong>Residential / TOU:</strong> เลือกประเภทมิเตอร์ที่บ้านใช้จริง (TOU มักจะคุ้มค่ากว่าเมื่อติดโซลาร์)<br>
+                    - <strong>Export:</strong> อนุญาตให้ขายไฟส่วนเกินกลับให้การไฟฟ้า (ที่อัตรา FIT)<br>
+                    - <strong>Zero Export:</strong> ติดตั้งกันย้อนเพื่อไม่ให้ไฟไหลออก (เหมาะสำหรับผู้ที่ไม่สะดวกทำเรื่องขายไฟ)
                 </div>
             </div>
 
@@ -183,14 +202,14 @@
                     </thead>
                     <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left">
                         <tr v-for="(item, idx) in appliances" :key="item.id" :class="item.active === false ? 'opacity-30' : ''">
-                            <td class="p-5 text-left text-left"><div class="flex items-center gap-2 text-left text-left"><span class="no-render drag-handle text-lg text-left text-left">⠿</span>
+                            <td class="p-5 text-left text-left"><div class="flex items-center gap-2 text-left text-left text-left"><span class="no-render drag-handle text-lg text-left text-left">⠿</span>
                                 <button @click="item.active = !item.active" class="no-render text-lg leading-none text-left">{{ item.active !== false ? '☀️' : '🌑' }}</button>
                                 <span class="font-black text-indigo-700 uppercase tracking-tight truncate text-left text-left">{{ item.name }}</span></div></td>
-                            <td class="p-5 text-center text-[10px] whitespace-nowrap text-left">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase text-left">W/BTU</span></td>
-                            <td class="p-5 text-center text-left"><div class="flex gap-[2px] justify-center items-center text-left text-left text-left"><div v-for="h in 24" :key="h-1" class="mini-dot text-left text-left text-left" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
-                            <td class="p-5 text-center font-black text-emerald-600 text-left text-left">{{ item.days }}</td>
+                            <td class="p-5 text-center text-[10px] whitespace-nowrap text-left text-left">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase text-left text-left">W/BTU</span></td>
+                            <td class="p-5 text-center text-left text-left"><div class="flex gap-[2px] justify-center items-center text-left text-left text-left"><div v-for="h in 24" :key="h-1" class="mini-dot text-left text-left" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
+                            <td class="p-5 text-center font-black text-emerald-600 text-left text-left text-left">{{ item.days }}</td>
                             <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10 text-right text-left text-left">฿{{ formatNumber(getItemGrossCost(item)) }}
-                                <button @click="removeAppliance(idx)" class="no-render absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-200 hover:text-red-500 transition-colors text-right">🗑️</button>
+                                <button @click="removeAppliance(idx)" class="no-render absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-200 hover:text-red-500 transition-colors text-right text-left">🗑️</button>
                             </td>
                         </tr>
                     </tbody>
@@ -198,20 +217,20 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left">
-            <h3 class="font-black text-lg text-indigo-900 uppercase italic border-b pb-4 text-left">⚙️ Unit Configuration</h3>
+        <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left text-left">
+            <h3 class="font-black text-lg text-indigo-900 uppercase italic border-b pb-4 text-left text-left">⚙️ Unit Configuration</h3>
             <div class="space-y-4 text-left">
                 <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all text-left">
                     <div class="lg:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-left text-left">
-                        <div class="col-span-2 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
-                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm text-left"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
-                        <div class="text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm text-left"></div>
-                        <div class="col-span-4 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
+                        <div class="col-span-2 text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
+                        <div class="text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm text-left"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
+                        <div class="text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm text-left"></div>
+                        <div class="col-span-4 text-left text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest text-left">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
                     </div>
-                    <div class="lg:col-span-7 flex flex-col gap-4 text-left text-left">
+                    <div class="lg:col-span-7 flex flex-col gap-4 text-left">
                         <div class="flex justify-between items-center px-1 text-left text-left">
-                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic text-left text-left">Timeline Pattern</span>
-                            <div class="flex gap-2">
+                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic text-left text-left text-left">Timeline Pattern</span>
+                            <div class="flex gap-2 text-left">
                                 <button @click="applyPreset(item, '24h')" class="bg-indigo-600 text-white text-[9px] font-black px-4 py-2 rounded-lg uppercase shadow-sm">24h</button>
                                 <button @click="applyPreset(item, 'day')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Day</button>
                                 <button @click="applyPreset(item, 'night')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase text-left text-left">Night</button>
@@ -220,9 +239,10 @@
                         <div class="jumbo-slot-grid text-left text-left text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left">{{ h-1 }}</div></div>
                     </div>
                 </div>
-                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center text-left">+ REGISTER NEW SYSTEM DEVICE</button>
+                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center text-left text-left">+ REGISTER NEW SYSTEM DEVICE</button>
             </div>
         </div>
+        <div class="pt-10 flex justify-center no-print text-center text-left text-left text-left text-left"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em] text-center text-left text-left text-left text-left">⚠️ Purge All Storage</button></div>
     </div>
 
 <script>
@@ -241,7 +261,7 @@
             const activeChartPlan = ref(0);
             let energyChartInstance = null;
 
-            // 🎯 Reality Strict Logic Expansion (No Baseline Effect)
+            // 🎯 Reality Strict Logic Expansion (No effect on Baseline)
             const SYSTEM_EFF = 0.85; 
             const BATT_MAX_C = 0.22; // Strict Discharge Rate
             const BATT_DOD_LIMIT = 0.20; // Cut-off at 20%
@@ -302,7 +322,7 @@
                         } else { 
                             totalGridSaving += (stepSolarWh / 1000) * curRate; directSolarWh += stepSolarWh;
                             const deficit = stepLoadWh - stepSolarWh; 
-                            if (batCapWh > 0) { const discharge = Math.min(deficit, maxRateWh, socWh - (batCapWh * BATT_DOD_LIMIT)); totalGridSaving += ((discharge * BATT_DISCHARGE_EFF) / 1000) * curRate; socWh -= discharge; directSolarWh += (discharge * BATT_DISCHARGE_EFF); } 
+                            if (batCapWh > 0) { const discharge = Math.min(deficit, maxRateWh, socWh - (batCapWh * BATT_DOD_LIMIT)); totalGridSaving += ((discharge * BATT_DISCHARGE_EFF) / 1000) * curRate; socWh -= (discharge / BATT_DISCHARGE_EFF); directSolarWh += (discharge * BATT_DISCHARGE_EFF); } 
                         }
                     }
                 }
@@ -311,8 +331,20 @@
 
             const calculateWealth = (monthlySaving, opt) => {
                 const cost = opt.cost;
+                const inflation = calcMode.value === 'Investor' ? 1.03 : 1.0; 
                 const annualBase = monthlySaving * 12;
-                return { netProfitAtTarget: (annualBase * targetYear.value) - cost, returnVal: (annualBase * 100 / cost).toFixed(1), paybackDecimal: (cost / (annualBase || 1)).toFixed(1), y5: (annualBase * 5), y10: (annualBase * 10), y15: (annualBase * 15), y25: (annualBase * 25) };
+                let y5 = 0, y10 = 0, y15 = 0, y25 = 0, netProfitAtTarget = 0, cumulative = 0;
+                for (let i = 1; i <= Math.max(25, targetYear.value); i++) {
+                    let yearlySaving = annualBase * Math.pow(inflation * 0.995, i-1);
+                    if (i % 12 === 0 && i !== 0) yearlySaving -= 35000;
+                    if (i % 10 === 0 && i !== 0 && opt.batteryKwh > 0) yearlySaving -= (opt.batteryKwh * 14000);
+                    cumulative += yearlySaving; 
+                    if (i === 5) y5 = cumulative; if (i === 10) y10 = cumulative; if (i === 15) y15 = cumulative; if (i === 25) y25 = cumulative;
+                    if (i === targetYear.value) netProfitAtTarget = cumulative - cost;
+                }
+                const paybackDecimal = (cost / (annualBase || 1)).toFixed(1);
+                const simpleROI = (annualBase * 100 / cost).toFixed(1);
+                return { y5, y10, y15, y25, netProfitAtTarget, returnVal: simpleROI, paybackDecimal };
             };
 
             const getDailyData = (opt) => {
