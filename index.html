@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.39.14.0 - Final Master LOCKED</title>
+    <title>Solar Pro V.39.17.0 - ROI Master LOCKED</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -33,8 +33,8 @@
         
         <div class="flex justify-between items-center no-print text-left">
             <div class="flex flex-col text-left">
-                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.14.0</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Final Master | Full Image-Matched Notes | Logic LOCKED</span>
+                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.17.0</h1>
+                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Final Master | ROI Toggle Fixed | Baseline LOCKED</span>
             </div>
             <div class="flex gap-2">
                 <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
@@ -91,7 +91,7 @@
                                 <p class="text-[9px] font-bold uppercase opacity-60 text-left">Net Profit Generated (@ Year {{ targetYear }})</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-[9px] font-black text-orange-400 uppercase tracking-widest">{{ calcMode === 'Investor' ? 'Investor IRR' : 'Simple ROI/Y' }}</span>
+                                <span class="text-[9px] font-black text-orange-400 uppercase tracking-widest">{{ calcMode === 'Investor' ? 'Investor Return' : 'Simple ROI/Y' }}</span>
                                 <div class="text-2xl font-black text-left">{{ calculateWealth(res.totalSavings, options[idx]).returnVal }}%</div>
                             </div>
                         </div>
@@ -110,10 +110,10 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-3xl shadow-xl p-8 border-l-8 border-indigo-600 text-left">
-                <div class="flex justify-between items-center mb-6">
+            <div class="bg-white rounded-3xl shadow-xl p-8 border-l-8 border-indigo-600 text-left text-left">
+                <div class="flex justify-between items-center mb-6 text-left">
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] italic text-left">Daily Energy Profile & Battery SOC</h3>
-                    <div class="flex gap-2 no-print">
+                    <div class="flex gap-2 no-print text-left">
                         <button v-for="(opt, idx) in options" @click="activeChartPlan = idx" :class="activeChartPlan === idx ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all">{{opt.title}}</button>
                     </div>
                 </div>
@@ -133,10 +133,10 @@
                     </thead>
                     <tbody class="text-sm font-bold text-left">
                         <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Monthly Net Savings</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-emerald-600 text-2xl font-black text-center text-left">฿{{ formatNumber(res.totalSavings) }}</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Self-Sufficiency</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center">{{ res.ss.toFixed(1) }}%</td></tr>
-                        <tr class="border-b border-slate-50 text-slate-400"><td class="p-4 text-left text-[10px] uppercase italic">Energy Wasted</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-xs text-center text-red-400">{{ res.wasted.toFixed(1) }} kWh</td></tr>
-                        <tr class="border-b border-slate-50 bg-slate-50/50"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">Final Monthly Pay</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center">฿{{ formatNumber(totalGrossCost - res.totalSavings) }}</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">ROI: Payback Period</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center">{{ calculateWealth(res.totalSavings, options[idx]).paybackDecimal }} Years</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Self-Sufficiency</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center text-left">{{ res.ss.toFixed(1) }}%</td></tr>
+                        <tr class="border-b border-slate-50 text-slate-400 text-left"><td class="p-4 text-left text-[10px] uppercase italic">Energy Wasted</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-xs text-center text-red-400 text-left">{{ res.wasted.toFixed(1) }} kWh</td></tr>
+                        <tr class="border-b border-slate-50 bg-slate-50/50 text-left"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">Final Monthly Pay</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center text-left">฿{{ formatNumber(totalGrossCost - res.totalSavings) }}</td></tr>
+                        <tr class="border-b border-slate-50 text-left"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">ROI: Payback Period</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center text-left">{{ calculateWealth(res.totalSavings, options[idx]).paybackDecimal }} Years</td></tr>
                     </tbody>
                 </table>
                 <div class="card-note">
@@ -149,11 +149,11 @@
 
             <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white relative overflow-hidden text-left">
                 <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em] mb-3 italic text-left">Confirmed Monthly Gross Baseline ({{ meterType }})</p>
-                <div class="flex justify-center items-baseline gap-2 mb-6">
+                <div class="flex justify-center items-baseline gap-2 mb-6 text-left">
                     <span class="text-6xl font-black italic text-left">฿{{ formatNumber(totalGrossCost) }}</span>
                     <span class="text-slate-500 font-bold uppercase text-sm">/ Month</span>
                 </div>
-                <div class="max-w-md mx-auto">
+                <div class="max-w-md mx-auto text-left">
                     <div class="flex justify-between text-[10px] font-black uppercase mb-1.5 tracking-widest text-left">
                         <span class="text-indigo-400 text-left">☀️ Day Use: {{ dayRatio }}%</span>
                         <span class="text-slate-400 text-right text-left">🌙 Night Use: {{ nightRatio }}%</span>
@@ -162,7 +162,7 @@
                         <div class="h-full bg-indigo-500 transition-all duration-500" :style="{width: dayRatio + '%'}"></div>
                     </div>
                 </div>
-                <div class="card-note bg-white/5 border-l-indigo-400 mt-6">
+                <div class="card-note bg-white/5 border-l-indigo-400 mt-6 text-left">
                     <strong>Note:</strong> ยอดค่าไฟเฉลี่ยรายเดือนของคุณก่อนติดตั้งโซลาร์เซลล์ คำนวณจากประเภทมิเตอร์และจำนวนเครื่องใช้ไฟฟ้าที่คุณระบุไว้ด้านล่าง
                 </div>
             </div>
@@ -176,7 +176,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-2 text-left">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-left text-left">Grid Export Strategy</span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-left">Grid Export Strategy</span>
                     <div class="flex p-1 bg-slate-100 rounded-2xl w-fit shadow-inner">
                         <button @click="exportMode = 'Export'" :class="exportMode === 'Export' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Export (ขายไฟ)</button>
                         <button @click="exportMode = 'NoExport'" :class="exportMode === 'NoExport' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Zero Export</button>
@@ -185,7 +185,7 @@
                 <div class="flex flex-wrap gap-6 items-center border-l pl-8 ml-auto text-left">
                     <div v-if="meterType === 'Residential'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">Standard Rate</label><input type="number" v-model="rateFlat" step="0.01" class="w-16 font-black text-indigo-600 bg-transparent text-sm"></div>
                     <div v-if="meterType === 'TOU'" class="flex gap-4 text-left"><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Peak</label><input type="number" v-model="ratePeak" step="0.01" class="w-16 font-black text-orange-600 bg-transparent text-sm"></div><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Off-Peak</label><input type="number" v-model="rateOff" step="0.01" class="w-16 font-black text-blue-600 bg-transparent text-sm text-left"></div></div>
-                    <div v-if="exportMode === 'Export'" class="flex flex-col text-left text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left text-left">FIT Rate</label><input type="number" v-model="exportRate" step="0.01" class="w-16 font-black text-emerald-600 bg-transparent text-sm"></div>
+                    <div v-if="exportMode === 'Export'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">FIT Rate</label><input type="number" v-model="exportRate" step="0.01" class="w-16 font-black text-emerald-600 bg-transparent text-sm"></div>
                 </div>
                 <div class="w-full card-note">
                     <strong>Note:</strong> กำหนดราคาไฟฟ้าและกลยุทธ์การเชื่อมต่อ<br>
@@ -196,19 +196,19 @@
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden text-left">
-                <table class="w-full text-left text-sm table-fixed">
-                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left">
+                <table class="w-full text-left text-sm table-fixed text-left text-left">
+                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left text-left">
                         <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%]">Spec</th><th class="p-5 text-center w-[30%] text-center">Schedule</th><th class="p-5 text-center w-[10%] text-center">Days</th><th class="p-5 text-right w-[20%] text-right">Cost/Mo.</th></tr>
                     </thead>
-                    <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left">
+                    <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left text-left">
                         <tr v-for="(item, idx) in appliances" :key="item.id" :class="item.active === false ? 'opacity-30' : ''">
-                            <td class="p-5 text-left text-left"><div class="flex items-center gap-2 text-left text-left text-left"><span class="no-render drag-handle text-lg text-left text-left">⠿</span>
-                                <button @click="item.active = !item.active" class="no-render text-lg leading-none text-left">{{ item.active !== false ? '☀️' : '🌑' }}</button>
+                            <td class="p-5 text-left text-left"><div class="flex items-center gap-2 text-left text-left"><span class="no-render drag-handle text-lg text-left text-left">⠿</span>
+                                <button @click="item.active = !item.active" class="no-render text-lg leading-none text-left text-left">{{ item.active !== false ? '☀️' : '🌑' }}</button>
                                 <span class="font-black text-indigo-700 uppercase tracking-tight truncate text-left text-left">{{ item.name }}</span></div></td>
-                            <td class="p-5 text-center text-[10px] whitespace-nowrap text-left text-left">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase text-left text-left">W/BTU</span></td>
-                            <td class="p-5 text-center text-left text-left"><div class="flex gap-[2px] justify-center items-center text-left text-left text-left"><div v-for="h in 24" :key="h-1" class="mini-dot text-left text-left" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
+                            <td class="p-5 text-center text-[10px] whitespace-nowrap text-left text-left">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase text-left">W/BTU</span></td>
+                            <td class="p-5 text-center text-left text-left text-left"><div class="flex gap-[2px] justify-center items-center text-left text-left text-left"><div v-for="h in 24" :key="h-1" class="mini-dot text-left text-left" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
                             <td class="p-5 text-center font-black text-emerald-600 text-left text-left text-left">{{ item.days }}</td>
-                            <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10 text-right text-left text-left">฿{{ formatNumber(getItemGrossCost(item)) }}
+                            <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10 text-right text-left text-left text-left">฿{{ formatNumber(getItemGrossCost(item)) }}
                                 <button @click="removeAppliance(idx)" class="no-render absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-200 hover:text-red-500 transition-colors text-right text-left">🗑️</button>
                             </td>
                         </tr>
@@ -220,29 +220,29 @@
         <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left text-left">
             <h3 class="font-black text-lg text-indigo-900 uppercase italic border-b pb-4 text-left text-left">⚙️ Unit Configuration</h3>
             <div class="space-y-4 text-left">
-                <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all text-left">
+                <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all text-left text-left">
                     <div class="lg:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-left text-left">
-                        <div class="col-span-2 text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
-                        <div class="text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm text-left"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
-                        <div class="text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm text-left"></div>
-                        <div class="col-span-4 text-left text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest text-left">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
+                        <div class="col-span-2 text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm text-left"></div>
+                        <div class="text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm text-left"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
+                        <div class="text-left text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm text-left"></div>
+                        <div class="col-span-4 text-left text-left text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest text-left">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm text-left"></div>
                     </div>
                     <div class="lg:col-span-7 flex flex-col gap-4 text-left">
-                        <div class="flex justify-between items-center px-1 text-left text-left">
-                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic text-left text-left text-left">Timeline Pattern</span>
+                        <div class="flex justify-between items-center px-1 text-left text-left text-left">
+                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic text-left text-left text-left text-left">Timeline Pattern</span>
                             <div class="flex gap-2 text-left">
-                                <button @click="applyPreset(item, '24h')" class="bg-indigo-600 text-white text-[9px] font-black px-4 py-2 rounded-lg uppercase shadow-sm">24h</button>
+                                <button @click="applyPreset(item, '24h')" class="bg-indigo-600 text-white text-[9px] font-black px-4 py-2 rounded-lg uppercase shadow-sm text-left">24h</button>
                                 <button @click="applyPreset(item, 'day')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Day</button>
                                 <button @click="applyPreset(item, 'night')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase text-left text-left">Night</button>
                             </div>
                         </div>
-                        <div class="jumbo-slot-grid text-left text-left text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left">{{ h-1 }}</div></div>
+                        <div class="jumbo-slot-grid text-left text-left text-left text-left text-left text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left text-left text-left">{{ h-1 }}</div></div>
                     </div>
                 </div>
-                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center text-left text-left">+ REGISTER NEW SYSTEM DEVICE</button>
+                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center text-left text-left text-left text-left">+ REGISTER NEW SYSTEM DEVICE</button>
             </div>
         </div>
-        <div class="pt-10 flex justify-center no-print text-center text-left text-left text-left text-left"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em] text-center text-left text-left text-left text-left">⚠️ Purge All Storage</button></div>
+        <div class="pt-10 flex justify-center no-print text-center text-left text-left text-left text-left text-left"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em] text-center text-left text-left text-left text-left text-left">⚠️ Purge All Storage</button></div>
     </div>
 
 <script>
@@ -261,11 +261,11 @@
             const activeChartPlan = ref(0);
             let energyChartInstance = null;
 
-            // 🎯 Reality Strict Logic Expansion (No effect on Baseline)
+            // 🎯 Reality Strict Constants (No Effect on Baseline)
             const SYSTEM_EFF = 0.85; 
-            const BATT_MAX_C = 0.22; // Strict Discharge Rate
-            const BATT_DOD_LIMIT = 0.20; // Cut-off at 20%
-            const BATT_DISCHARGE_EFF = 0.90; // Loss during use
+            const BATT_MAX_C = 0.22; 
+            const BATT_DOD_LIMIT = 0.20; 
+            const BATT_DISCHARGE_EFF = 0.90;
 
             // 🔒 LOCKED Baseline Logic V.37.6.0
             const getDeviceWattage = (i) => { if (i.active === false) return 0; if (i.type === 'ac_inverter') return (i.power / 25) * 0.6; if (i.type === 'ac_standard') return (i.power / 15) * 0.8; if (i.type === 'fridge') return (i.power * 0.4); if (i.type === 'computer') return (i.power * 0.5); return i.power; };
@@ -331,11 +331,13 @@
 
             const calculateWealth = (monthlySaving, opt) => {
                 const cost = opt.cost;
-                const inflation = calcMode.value === 'Investor' ? 1.03 : 1.0; 
+                const isInv = calcMode.value === 'Investor';
+                const inflation = isInv ? 1.03 : 1.00; 
+                const degradation = isInv ? 0.995 : 1.00;
                 const annualBase = monthlySaving * 12;
                 let y5 = 0, y10 = 0, y15 = 0, y25 = 0, netProfitAtTarget = 0, cumulative = 0;
                 for (let i = 1; i <= Math.max(25, targetYear.value); i++) {
-                    let yearlySaving = annualBase * Math.pow(inflation * 0.995, i-1);
+                    let yearlySaving = annualBase * Math.pow(inflation * degradation, i-1);
                     if (i % 12 === 0 && i !== 0) yearlySaving -= 35000;
                     if (i % 10 === 0 && i !== 0 && opt.batteryKwh > 0) yearlySaving -= (opt.batteryKwh * 14000);
                     cumulative += yearlySaving; 
@@ -343,8 +345,18 @@
                     if (i === targetYear.value) netProfitAtTarget = cumulative - cost;
                 }
                 const paybackDecimal = (cost / (annualBase || 1)).toFixed(1);
-                const simpleROI = (annualBase * 100 / cost).toFixed(1);
-                return { y5, y10, y15, y25, netProfitAtTarget, returnVal: simpleROI, paybackDecimal };
+                
+                // 🛠️ FIXED: ROI Return % calculation depends on Mode
+                let totalProfitOver25 = 0;
+                let cumProfit = 0;
+                for (let i = 1; i <= 25; i++) {
+                    let yearlyS = annualBase * Math.pow(inflation * degradation, i-1);
+                    cumProfit += yearlyS;
+                }
+                const avgAnnualProfit = (cumProfit / 25);
+                const returnRate = (avgAnnualProfit * 100 / cost).toFixed(1);
+
+                return { y5, y10, y15, y25, netProfitAtTarget, returnVal: returnRate, paybackDecimal };
             };
 
             const getDailyData = (opt) => {
@@ -367,8 +379,8 @@
                     const sS = (opt.solarKw * 1000 * SYSTEM_EFF) * yF * dt;
                     let sL = 0; appliances.value.forEach(i => { if (i.active && isSlotActive(i, h)) sL += (getDeviceWattage(i) * dt); });
                     if (sS >= sL) { if (batCapWh > 0) { const charge = Math.min(sS - sL, maxRateWh, (batCapWh - socWh) / 0.95); socWh += (charge * 0.95); } } 
-                    else { if (batCapWh > 0) { const discharge = Math.min(sL - sS, maxRateWh, socWh - (batCapWh * BATT_DOD_LIMIT)); socWh -= (discharge / BATT_DISCHARGE_EFF); } }
-                    if(s % 4 === 0) { solarP.push(sS / dt); loadP.push(sL / dt); socP.push(Math.max(0, batCapWh > 0 ? (socWh / batCapWh) * 100 : 0)); }
+                    else { if (batCapWh > 0) { const discharge = Math.min(sL - sS, maxRateWh, socWh - (batCapWh * BATT_DOD_LIMIT)); socWh -= discharge; } }
+                    if(s % 4 === 0) { solarP.push(sS / dt); loadP.push(sL / dt); socP.push(batCapWh > 0 ? (socWh / batCapWh) * 100 : 0); }
                 }
                 return { solarP, loadP, socP };
             };
