@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.39.17.0 - ROI Master LOCKED</title>
+    <title>Solar Pro V.39.18.0 - Net Billing Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -21,10 +21,10 @@
         .is-rendering .no-render, .is-rendering .input-only { display: none !important; }
         .display-only { display: none; } .is-rendering .display-only { display: block !important; }
         .switch-btn { padding: 6px 16px; border-radius: 12px; font-size: 11px; font-weight: 900; text-transform: uppercase; transition: all 0.3s; border: 1px solid transparent; }
-        .switch-btn.active { background: white; shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); color: #4338ca; }
+        .switch-btn.active { background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); color: #4338ca; }
         .switch-btn.inactive { color: #94a3b8; }
         [v-cloak] { display: none; }
-        .card-note { margin-top: 12px; padding: 8px 12px; background: rgba(255,255,255,0.5); border-radius: 8px; font-size: 10px; line-height: 1.4; color: #64748b; border-left: 3px solid #cbd5e1; text-left: left; }
+        .card-note { margin-top: 12px; padding: 8px 12px; background: rgba(255,255,255,0.5); border-radius: 8px; font-size: 10px; line-height: 1.4; color: #64748b; border-left: 3px solid #cbd5e1; text-align: left; }
         .bg-indigo-900 .card-note { background: rgba(255,255,255,0.05); color: #a5b4fc; border-left-color: #6366f1; }
     </style>
 </head>
@@ -33,8 +33,8 @@
         
         <div class="flex justify-between items-center no-print text-left">
             <div class="flex flex-col text-left">
-                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.17.0</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Final Master | ROI Toggle Fixed | Baseline LOCKED</span>
+                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.18.0</h1>
+                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Net Billing | ROI Logic FIXED | Baseline LOCKED</span>
             </div>
             <div class="flex gap-2">
                 <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
@@ -110,10 +110,10 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-3xl shadow-xl p-8 border-l-8 border-indigo-600 text-left text-left">
-                <div class="flex justify-between items-center mb-6 text-left">
+            <div class="bg-white rounded-3xl shadow-xl p-8 border-l-8 border-indigo-600 text-left">
+                <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] italic text-left">Daily Energy Profile & Battery SOC</h3>
-                    <div class="flex gap-2 no-print text-left">
+                    <div class="flex gap-2 no-print">
                         <button v-for="(opt, idx) in options" @click="activeChartPlan = idx" :class="activeChartPlan === idx ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'" class="px-3 py-1 rounded-lg text-[9px] font-black uppercase transition-all">{{opt.title}}</button>
                     </div>
                 </div>
@@ -132,31 +132,30 @@
                         </tr>
                     </thead>
                     <tbody class="text-sm font-bold text-left">
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Monthly Net Savings</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-emerald-600 text-2xl font-black text-center text-left">฿{{ formatNumber(res.totalSavings) }}</td></tr>
-                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Self-Sufficiency</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center text-left">{{ res.ss.toFixed(1) }}%</td></tr>
-                        <tr class="border-b border-slate-50 text-slate-400 text-left"><td class="p-4 text-left text-[10px] uppercase italic">Energy Wasted</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-xs text-center text-red-400 text-left">{{ res.wasted.toFixed(1) }} kWh</td></tr>
-                        <tr class="border-b border-slate-50 bg-slate-50/50 text-left"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">Final Monthly Pay</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center text-left">฿{{ formatNumber(totalGrossCost - res.totalSavings) }}</td></tr>
-                        <tr class="border-b border-slate-50 text-left"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">ROI: Payback Period</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center text-left">{{ calculateWealth(res.totalSavings, options[idx]).paybackDecimal }} Years</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Monthly Net Savings (Incl. Export)</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-emerald-600 text-2xl font-black text-center">฿{{ formatNumber(res.totalSavings) }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-slate-500">Self-Sufficiency</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-700 text-lg text-center">{{ res.ss.toFixed(1) }}%</td></tr>
+                        <tr class="border-b border-slate-50 text-slate-400"><td class="p-4 text-left text-[10px] uppercase italic">Energy Wasted</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-xs text-center text-red-400">{{ res.wasted.toFixed(1) }} kWh</td></tr>
+                        <tr class="border-b border-slate-50 bg-slate-50/50"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">Net Billing Monthly Pay</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center">฿{{ formatNumber(Math.max(0, totalGrossCost - res.totalSavings)) }}</td></tr>
+                        <tr class="border-b border-slate-50"><td class="p-4 text-left text-[10px] uppercase text-indigo-500 font-black">ROI: Payback Period</td><td v-for="(res, idx) in simResults" :key="idx" class="p-4 text-slate-900 text-xl font-black italic text-center">{{ calculateWealth(res.totalSavings, options[idx]).paybackDecimal }} Years</td></tr>
                     </tbody>
                 </table>
                 <div class="card-note">
                     <strong>Note:</strong> ตัวบ่งชี้ความคุ้มค่าระดับเทคนิค<br>
-                    - <strong>Self-Sufficiency:</strong> สัดส่วนการลดการพึ่งพาไฟฟ้าจากสายส่ง (ยิ่งสูง ระบบยิ่งช่วยประหยัดไฟบ้านได้มาก)<br>
-                    - <strong>Energy Wasted:</strong> พลังงานจากแผงที่ผลิตได้แต่ไม่ได้ใช้และไม่ได้เก็บลงแบตเตอรี่ (ควรมีค่าต่ำที่สุดเพื่อความคุ้มค่า)<br>
-                    - <strong>Final Monthly Pay:</strong> ยอดบิลค่าไฟที่คุณต้องจ่ายให้การไฟฟ้าจริงต่อเดือนหลังหักส่วนลดจากโซลาร์แล้ว
+                    - <strong>Net Billing Monthly Pay:</strong> ยอดบิลที่ต้องจ่ายสุทธิหลังหักลบรายได้จากการขายไฟคืน (ถ้ามี) ในบิลเดียว<br>
+                    - <strong>Energy Wasted:</strong> พลังงานส่วนเกินในโหมด Zero Export (จะนำมาคำนวณเป็นรายได้เฉพาะเมื่อเปิดโหมด Export)
                 </div>
             </div>
 
             <div class="bg-slate-900 rounded-3xl p-10 text-center border-b-8 border-indigo-600 shadow-2xl text-white relative overflow-hidden text-left">
-                <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em] mb-3 italic text-left">Confirmed Monthly Gross Baseline ({{ meterType }})</p>
-                <div class="flex justify-center items-baseline gap-2 mb-6 text-left">
-                    <span class="text-6xl font-black italic text-left">฿{{ formatNumber(totalGrossCost) }}</span>
+                <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em] mb-3 italic">Confirmed Monthly Gross Baseline ({{ meterType }})</p>
+                <div class="flex justify-center items-baseline gap-2 mb-6">
+                    <span class="text-6xl font-black italic">฿{{ formatNumber(totalGrossCost) }}</span>
                     <span class="text-slate-500 font-bold uppercase text-sm">/ Month</span>
                 </div>
                 <div class="max-w-md mx-auto text-left">
-                    <div class="flex justify-between text-[10px] font-black uppercase mb-1.5 tracking-widest text-left">
-                        <span class="text-indigo-400 text-left">☀️ Day Use: {{ dayRatio }}%</span>
-                        <span class="text-slate-400 text-right text-left">🌙 Night Use: {{ nightRatio }}%</span>
+                    <div class="flex justify-between text-[10px] font-black uppercase mb-1.5 tracking-widest">
+                        <span class="text-indigo-400">☀️ Day Use: {{ dayRatio }}%</span>
+                        <span class="text-slate-400">🌙 Night Use: {{ nightRatio }}%</span>
                     </div>
                     <div class="w-full h-1.5 bg-slate-800 rounded-full flex overflow-hidden">
                         <div class="h-full bg-indigo-500 transition-all duration-500" :style="{width: dayRatio + '%'}"></div>
@@ -168,48 +167,42 @@
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl p-6 border-l-8 border-indigo-500 flex flex-wrap items-center gap-8 no-print text-left">
-                <div class="flex flex-col gap-2 text-left">
+                <div class="flex flex-col gap-2">
                     <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Meter Tariff Selection</span>
                     <div class="flex p-1 bg-slate-100 rounded-2xl w-fit shadow-inner">
                         <button @click="meterType = 'Residential'" :class="meterType === 'Residential' ? 'active' : 'inactive'" class="switch-btn">Residential</button>
                         <button @click="meterType = 'TOU'" :class="meterType === 'TOU' ? 'active' : 'inactive'" class="switch-btn">TOU Meter</button>
                     </div>
                 </div>
-                <div class="flex flex-col gap-2 text-left">
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-left">Grid Export Strategy</span>
+                <div class="flex flex-col gap-2">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-left">Grid Export Strategy (Net Billing)</span>
                     <div class="flex p-1 bg-slate-100 rounded-2xl w-fit shadow-inner">
                         <button @click="exportMode = 'Export'" :class="exportMode === 'Export' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Export (ขายไฟ)</button>
                         <button @click="exportMode = 'NoExport'" :class="exportMode === 'NoExport' ? 'active shadow-sm' : 'inactive'" class="switch-btn">Zero Export</button>
                     </div>
                 </div>
                 <div class="flex flex-wrap gap-6 items-center border-l pl-8 ml-auto text-left">
-                    <div v-if="meterType === 'Residential'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">Standard Rate</label><input type="number" v-model="rateFlat" step="0.01" class="w-16 font-black text-indigo-600 bg-transparent text-sm"></div>
-                    <div v-if="meterType === 'TOU'" class="flex gap-4 text-left"><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Peak</label><input type="number" v-model="ratePeak" step="0.01" class="w-16 font-black text-orange-600 bg-transparent text-sm"></div><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">Off-Peak</label><input type="number" v-model="rateOff" step="0.01" class="w-16 font-black text-blue-600 bg-transparent text-sm text-left"></div></div>
-                    <div v-if="exportMode === 'Export'" class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase text-left">FIT Rate</label><input type="number" v-model="exportRate" step="0.01" class="w-16 font-black text-emerald-600 bg-transparent text-sm"></div>
-                </div>
-                <div class="w-full card-note">
-                    <strong>Note:</strong> กำหนดราคาไฟฟ้าและกลยุทธ์การเชื่อมต่อ<br>
-                    - <strong>Residential / TOU:</strong> เลือกประเภทมิเตอร์ที่บ้านใช้จริง (TOU มักจะคุ้มค่ากว่าเมื่อติดโซลาร์)<br>
-                    - <strong>Export:</strong> อนุญาตให้ขายไฟส่วนเกินกลับให้การไฟฟ้า (ที่อัตรา FIT)<br>
-                    - <strong>Zero Export:</strong> ติดตั้งกันย้อนเพื่อไม่ให้ไฟไหลออก (เหมาะสำหรับผู้ที่ไม่สะดวกทำเรื่องขายไฟ)
+                    <div v-if="meterType === 'Residential'" class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase">Standard Rate</label><input type="number" v-model="rateFlat" step="0.01" class="w-16 font-black text-indigo-600 bg-transparent text-sm"></div>
+                    <div v-if="meterType === 'TOU'" class="flex gap-4"><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">Peak</label><input type="number" v-model="ratePeak" step="0.01" class="w-16 font-black text-orange-600 bg-transparent text-sm"></div><div class="flex flex-col text-left"><label class="text-[8px] font-black text-slate-400 uppercase">Off-Peak</label><input type="number" v-model="rateOff" step="0.01" class="w-16 font-black text-blue-600 bg-transparent text-sm"></div></div>
+                    <div v-if="exportMode === 'Export'" class="flex flex-col"><label class="text-[8px] font-black text-slate-400 uppercase">FIT Rate</label><input type="number" v-model="exportRate" step="0.01" class="w-16 font-black text-emerald-600 bg-transparent text-sm"></div>
                 </div>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden text-left">
-                <table class="w-full text-left text-sm table-fixed text-left text-left">
-                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left text-left">
-                        <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%]">Spec</th><th class="p-5 text-center w-[30%] text-center">Schedule</th><th class="p-5 text-center w-[10%] text-center">Days</th><th class="p-5 text-right w-[20%] text-right">Cost/Mo.</th></tr>
+                <table class="w-full text-left text-sm table-fixed">
+                    <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black text-left">
+                        <tr><th class="p-5 w-[25%] text-left">Appliance Profile</th><th class="p-5 text-center w-[15%]">Spec</th><th class="p-5 text-center w-[30%]">Schedule</th><th class="p-5 text-center w-[10%]">Days</th><th class="p-5 text-right w-[20%]">Cost/Mo.</th></tr>
                     </thead>
-                    <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold text-left text-left">
+                    <tbody id="appliance-list-body" class="divide-y divide-slate-100 border-b font-bold">
                         <tr v-for="(item, idx) in appliances" :key="item.id" :class="item.active === false ? 'opacity-30' : ''">
-                            <td class="p-5 text-left text-left"><div class="flex items-center gap-2 text-left text-left"><span class="no-render drag-handle text-lg text-left text-left">⠿</span>
-                                <button @click="item.active = !item.active" class="no-render text-lg leading-none text-left text-left">{{ item.active !== false ? '☀️' : '🌑' }}</button>
-                                <span class="font-black text-indigo-700 uppercase tracking-tight truncate text-left text-left">{{ item.name }}</span></div></td>
-                            <td class="p-5 text-center text-[10px] whitespace-nowrap text-left text-left">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase text-left">W/BTU</span></td>
-                            <td class="p-5 text-center text-left text-left text-left"><div class="flex gap-[2px] justify-center items-center text-left text-left text-left"><div v-for="h in 24" :key="h-1" class="mini-dot text-left text-left" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
-                            <td class="p-5 text-center font-black text-emerald-600 text-left text-left text-left">{{ item.days }}</td>
-                            <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10 text-right text-left text-left text-left">฿{{ formatNumber(getItemGrossCost(item)) }}
-                                <button @click="removeAppliance(idx)" class="no-render absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-200 hover:text-red-500 transition-colors text-right text-left">🗑️</button>
+                            <td class="p-5 text-left"><div class="flex items-center gap-2 text-left"><span class="no-render drag-handle text-lg">⠿</span>
+                                <button @click="item.active = !item.active" class="no-render text-lg leading-none">{{ item.active !== false ? '☀️' : '🌑' }}</button>
+                                <span class="font-black text-indigo-700 uppercase tracking-tight truncate">{{ item.name }}</span></div></td>
+                            <td class="p-5 text-center text-[10px] whitespace-nowrap">{{ formatNumber(item.power) }} <span class="text-slate-400 text-[8px] uppercase">W/BTU</span></td>
+                            <td class="p-5 text-center"><div class="flex gap-[2px] justify-center items-center"><div v-for="h in 24" :key="h-1" class="mini-dot" :class="isSlotActive(item, h-1)?'active':''"></div></div></td>
+                            <td class="p-5 text-center font-black text-emerald-600">{{ item.days }}</td>
+                            <td class="p-5 text-right font-black italic relative text-indigo-700 pr-10">฿{{ formatNumber(getItemGrossCost(item)) }}
+                                <button @click="removeAppliance(idx)" class="no-render absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-200 hover:text-red-500 transition-colors">🗑️</button>
                             </td>
                         </tr>
                     </tbody>
@@ -217,37 +210,37 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left text-left">
-            <h3 class="font-black text-lg text-indigo-900 uppercase italic border-b pb-4 text-left text-left">⚙️ Unit Configuration</h3>
+        <div class="bg-white rounded-[2.5rem] p-10 shadow-2xl border border-slate-200 no-print space-y-8 text-left">
+            <h3 class="font-black text-lg text-indigo-900 uppercase italic border-b pb-4 text-left">⚙️ Unit Configuration</h3>
             <div class="space-y-4 text-left">
-                <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all text-left text-left">
-                    <div class="lg:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-left text-left">
-                        <div class="col-span-2 text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm text-left"></div>
-                        <div class="text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left text-left">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm text-left"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
-                        <div class="text-left text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-left text-left text-left">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm text-left"></div>
-                        <div class="col-span-4 text-left text-left text-left text-left text-left text-left text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest text-left">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm text-left"></div>
+                <div v-for="(item, idx) in appliances" :key="'edit-'+item.id" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm transition-all text-left">
+                    <div class="lg:col-span-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
+                        <div class="col-span-2 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase">Device Name</label><input type="text" v-model="item.name" class="w-full border rounded-xl p-3 font-bold text-indigo-700 text-xs uppercase shadow-sm"></div>
+                        <div class="text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase">Type</label><select v-model="item.type" class="w-full border rounded-xl p-3 font-bold bg-white text-[10px] uppercase shadow-sm"><option value="ac_inverter">AC Inverter</option><option value="ac_standard">AC Standard</option><option value="fridge">Fridge</option><option value="computer">Computer</option><option value="ev">EV Charge</option><option value="watt">General (W)</option></select></div>
+                        <div class="text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase">Days</label><input type="number" v-model="item.days" class="w-full border rounded-xl p-3 font-black text-center text-emerald-600 shadow-sm"></div>
+                        <div class="col-span-4 text-left"><label class="text-[9px] font-black text-slate-400 mb-1 block uppercase text-center tracking-widest">Power Load (BTU/W)</label><input type="number" v-model="item.power" class="w-full border rounded-xl p-3 font-black text-2xl text-center text-slate-700 shadow-sm"></div>
                     </div>
                     <div class="lg:col-span-7 flex flex-col gap-4 text-left">
-                        <div class="flex justify-between items-center px-1 text-left text-left text-left">
-                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic text-left text-left text-left text-left">Timeline Pattern</span>
-                            <div class="flex gap-2 text-left">
-                                <button @click="applyPreset(item, '24h')" class="bg-indigo-600 text-white text-[9px] font-black px-4 py-2 rounded-lg uppercase shadow-sm text-left">24h</button>
+                        <div class="flex justify-between items-center px-1">
+                            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest italic">Timeline Pattern</span>
+                            <div class="flex gap-2">
+                                <button @click="applyPreset(item, '24h')" class="bg-indigo-600 text-white text-[9px] font-black px-4 py-2 rounded-lg uppercase shadow-sm">24h</button>
                                 <button @click="applyPreset(item, 'day')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Day</button>
-                                <button @click="applyPreset(item, 'night')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase text-left text-left">Night</button>
+                                <button @click="applyPreset(item, 'night')" class="bg-indigo-100 text-indigo-700 text-[9px] font-black px-4 py-2 rounded-lg uppercase">Night</button>
                             </div>
                         </div>
-                        <div class="jumbo-slot-grid text-left text-left text-left text-left text-left text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn text-left text-left text-left">{{ h-1 }}</div></div>
+                        <div class="jumbo-slot-grid text-left"><div v-for="h in 24" :key="h-1" @click="toggleSlot(item, h-1)" :class="isSlotActive(item, h-1)?'active':''" class="jumbo-btn">{{ h-1 }}</div></div>
                     </div>
                 </div>
-                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center text-left text-left text-left text-left">+ REGISTER NEW SYSTEM DEVICE</button>
+                <button @click="addEmptyAppliance" class="w-full border-2 border-dashed border-indigo-200 text-indigo-400 py-6 rounded-[2.5rem] font-black text-sm uppercase hover:bg-indigo-50 transition-all text-center">+ REGISTER NEW SYSTEM DEVICE</button>
             </div>
         </div>
-        <div class="pt-10 flex justify-center no-print text-center text-left text-left text-left text-left text-left"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em] text-center text-left text-left text-left text-left text-left">⚠️ Purge All Storage</button></div>
+        <div class="pt-10 flex justify-center no-print text-center"><button @click="resetApp" class="text-[10px] text-slate-300 font-bold hover:text-red-500 uppercase underline tracking-[0.2em]">⚠️ Purge All Storage</button></div>
     </div>
 
 <script>
     const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
-    const MASTER_KEY = 'SOLAR_PRO_V36_UTILITY';
+    const MASTER_KEY = 'SOLAR_PRO_V36_UTILITY'; // 🎯 ใช้คีย์เดิมเพื่อเรียกข้อมูลเกตุคืนมา
 
     createApp({
         setup() {
@@ -261,13 +254,8 @@
             const activeChartPlan = ref(0);
             let energyChartInstance = null;
 
-            // 🎯 Reality Strict Constants (No Effect on Baseline)
-            const SYSTEM_EFF = 0.85; 
-            const BATT_MAX_C = 0.22; 
-            const BATT_DOD_LIMIT = 0.20; 
-            const BATT_DISCHARGE_EFF = 0.90;
+            const SYSTEM_EFF = 0.85; const BATT_MAX_C = 0.22; const BATT_DOD_LIMIT = 0.20; const BATT_DISCHARGE_EFF = 0.90;
 
-            // 🔒 LOCKED Baseline Logic V.37.6.0
             const getDeviceWattage = (i) => { if (i.active === false) return 0; if (i.type === 'ac_inverter') return (i.power / 25) * 0.6; if (i.type === 'ac_standard') return (i.power / 15) * 0.8; if (i.type === 'fridge') return (i.power * 0.4); if (i.type === 'computer') return (i.power * 0.5); return i.power; };
             const getItemGrossCost = (i) => { if (i.active === false) return 0; let monthlyCost = 0; const watts = getDeviceWattage(i); (i.slots || []).forEach(h => { let curRate = meterType.value === 'TOU' ? ((h >= 9 && h < 22) ? ratePeak.value : rateOff.value) : rateFlat.value; monthlyCost += (watts / 1000) * i.days * curRate; }); return monthlyCost; };
             
@@ -302,8 +290,9 @@
             const dayRatio = computed(() => { let d=0, n=0; appliances.value.forEach(i => { if (i.active === false) return; const w = getDeviceWattage(i); (i.slots || []).forEach(h => { if (h >= 6 && h < 18) d += w; else n += w; }); }); return (d+n) > 0 ? Math.round((d/(d+n))*100) : 0; });
             const nightRatio = computed(() => 100 - dayRatio.value);
 
+            // 🎯 FIXED Net Billing Logic
             const runSimulation = (opt) => {
-                let totalGridSaving = 0; let directSolarWh = 0; let totalLoadWh = 0; let solarProducedWh = 0;
+                let pureSavings = 0; let exportIncome = 0; let directSolarWh = 0; let totalLoadWh = 0; let solarProducedWh = 0;
                 const dt = 0.25; const batCapWh = opt.batteryKwh * 1000;
                 const maxRateWh = batCapWh * BATT_MAX_C * dt; 
                 for (let d = 1; d <= 30; d++) {
@@ -315,54 +304,50 @@
                         let stepLoadWh = 0;
                         appliances.value.forEach(i => { if (i.active && isSlotActive(i, h) && i.days >= d) stepLoadWh += (getDeviceWattage(i) * dt); });
                         solarProducedWh += stepSolarWh; totalLoadWh += stepLoadWh;
+                        
                         if (stepSolarWh >= stepLoadWh) { 
-                            totalGridSaving += (stepLoadWh / 1000) * curRate; directSolarWh += stepLoadWh;
+                            pureSavings += (stepLoadWh / 1000) * curRate; directSolarWh += stepLoadWh;
                             const surplus = stepSolarWh - stepLoadWh; 
-                            if (batCapWh > 0) { const charge = Math.min(surplus, maxRateWh, (batCapWh - socWh) / 0.95); socWh += (charge * 0.95); } 
+                            if (batCapWh > 0) { 
+                                const charge = Math.min(surplus, maxRateWh, (batCapWh - socWh) / 0.95); socWh += (charge * 0.95);
+                                if (exportMode.value === 'Export') exportIncome += ((surplus - charge) / 1000) * exportRate.value;
+                            } else if (exportMode.value === 'Export') {
+                                exportIncome += (surplus / 1000) * exportRate.value;
+                            }
                         } else { 
-                            totalGridSaving += (stepSolarWh / 1000) * curRate; directSolarWh += stepSolarWh;
+                            pureSavings += (stepSolarWh / 1000) * curRate; directSolarWh += stepSolarWh;
                             const deficit = stepLoadWh - stepSolarWh; 
-                            if (batCapWh > 0) { const discharge = Math.min(deficit, maxRateWh, socWh - (batCapWh * BATT_DOD_LIMIT)); totalGridSaving += ((discharge * BATT_DISCHARGE_EFF) / 1000) * curRate; socWh -= (discharge / BATT_DISCHARGE_EFF); directSolarWh += (discharge * BATT_DISCHARGE_EFF); } 
+                            if (batCapWh > 0) { 
+                                const discharge = Math.min(deficit, maxRateWh, socWh - (batCapWh * BATT_DOD_LIMIT)); 
+                                pureSavings += ((discharge * BATT_DISCHARGE_EFF) / 1000) * curRate; 
+                                socWh -= (discharge / BATT_DISCHARGE_EFF); directSolarWh += (discharge * BATT_DISCHARGE_EFF); 
+                            } 
                         }
                     }
                 }
-                return { totalSavings: totalGridSaving, ss: (directSolarWh / (totalLoadWh || 1)) * 100, wasted: Math.max(0, (solarProducedWh - directSolarWh)/1000) };
+                return { totalSavings: pureSavings + exportIncome, pureSavings, ss: (directSolarWh / (totalLoadWh || 1)) * 100, wasted: Math.max(0, (solarProducedWh - directSolarWh)/1000) };
             };
 
             const calculateWealth = (monthlySaving, opt) => {
-                const cost = opt.cost;
-                const isInv = calcMode.value === 'Investor';
-                const inflation = isInv ? 1.03 : 1.00; 
-                const degradation = isInv ? 0.995 : 1.00;
+                const cost = opt.cost; const isInv = calcMode.value === 'Investor';
+                const inflation = isInv ? 1.03 : 1.00; const degradation = isInv ? 0.995 : 1.00;
                 const annualBase = monthlySaving * 12;
                 let y5 = 0, y10 = 0, y15 = 0, y25 = 0, netProfitAtTarget = 0, cumulative = 0;
                 for (let i = 1; i <= Math.max(25, targetYear.value); i++) {
                     let yearlySaving = annualBase * Math.pow(inflation * degradation, i-1);
-                    if (i % 12 === 0 && i !== 0) yearlySaving -= 35000;
-                    if (i % 10 === 0 && i !== 0 && opt.batteryKwh > 0) yearlySaving -= (opt.batteryKwh * 14000);
+                    if (isInv) { if (i % 12 === 0) yearlySaving -= 35000; if (i % 10 === 0 && opt.batteryKwh > 0) yearlySaving -= (opt.batteryKwh * 14000); }
                     cumulative += yearlySaving; 
                     if (i === 5) y5 = cumulative; if (i === 10) y10 = cumulative; if (i === 15) y15 = cumulative; if (i === 25) y25 = cumulative;
                     if (i === targetYear.value) netProfitAtTarget = cumulative - cost;
                 }
                 const paybackDecimal = (cost / (annualBase || 1)).toFixed(1);
-                
-                // 🛠️ FIXED: ROI Return % calculation depends on Mode
-                let totalProfitOver25 = 0;
-                let cumProfit = 0;
-                for (let i = 1; i <= 25; i++) {
-                    let yearlyS = annualBase * Math.pow(inflation * degradation, i-1);
-                    cumProfit += yearlyS;
-                }
-                const avgAnnualProfit = (cumProfit / 25);
-                const returnRate = (avgAnnualProfit * 100 / cost).toFixed(1);
-
+                const returnRate = (((cumulative > 0 ? y25 : annualBase * 25) / 25) * 100 / cost).toFixed(1);
                 return { y5, y10, y15, y25, netProfitAtTarget, returnVal: returnRate, paybackDecimal };
             };
 
             const getDailyData = (opt) => {
                 const dt = 0.25; const batCapWh = opt.batteryKwh * 1000;
-                const maxRateWh = batCapWh * BATT_MAX_C * dt; 
-                let seedSocWh = batCapWh * BATT_DOD_LIMIT;
+                const maxRateWh = batCapWh * BATT_MAX_C * dt; let seedSocWh = batCapWh * BATT_DOD_LIMIT;
                 for (let s = 0; s < 96; s++) {
                     const h = Math.floor(s * dt);
                     const yF = (h < 6 || h > 18.5) ? 0 : Math.pow(Math.sin(((h - 6) / 12.5) * Math.PI), 1.2);
@@ -371,8 +356,7 @@
                     if (sS >= sL) { seedSocWh += Math.min(sS - sL, maxRateWh, (batCapWh - seedSocWh) / 0.95) * 0.95; } 
                     else { seedSocWh -= Math.min(sL - sS, maxRateWh, seedSocWh - (batCapWh * BATT_DOD_LIMIT)); }
                 }
-                let socWh = seedSocWh;
-                let solarP = []; let loadP = []; let socP = [];
+                let socWh = seedSocWh; let solarP = []; let loadP = []; let socP = [];
                 for (let s = 0; s < 96; s++) {
                     const h = Math.floor(s * dt);
                     const yF = (h < 6 || h > 18.5) ? 0 : Math.pow(Math.sin(((h - 6) / 12.5) * Math.PI), 1.2);
@@ -386,8 +370,7 @@
             };
 
             const updateDailyChart = () => {
-                const ctx = document.getElementById('dailyEnergyChart');
-                if (!ctx) return;
+                const ctx = document.getElementById('dailyEnergyChart'); if (!ctx) return;
                 if (energyChartInstance) energyChartInstance.destroy();
                 const d = getDailyData(options.value[activeChartPlan.value]);
                 energyChartInstance = new Chart(ctx, {
