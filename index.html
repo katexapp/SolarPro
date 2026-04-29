@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Pro V.39.22.23 - Energy Wasted FIXED</title>
+    <title>Solar Pro V.39.22.25 - Holiday & Wasted FIXED</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -34,8 +34,8 @@
         
         <div class="flex justify-between items-center no-print text-left">
             <div class="flex flex-col text-left">
-                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.22.23</h1>
-                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Net Billing | Wasted Energy FIXED | Triple Tariff Fixed</span>
+                <h1 class="text-2xl font-black text-indigo-900 italic uppercase">Solar Pro V.39.22.25</h1>
+                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded font-bold uppercase w-fit tracking-widest text-left">Net Billing | Wasted Energy FIXED | Holiday Baseline FIXED</span>
             </div>
             <div class="flex gap-2">
                 <button @click="saveAsImage" class="bg-indigo-600 text-white text-[11px] font-black py-2.5 px-6 rounded-full shadow-lg transition-all active:scale-95 flex items-center gap-2"><span>💾</span> SAVE IMAGE</button>
@@ -359,7 +359,12 @@
                 totalGrossCost: computed(() => {
                     const totalU = appliances.value.reduce((s, i) => s + getItemUnits(i), 0);
                     if (meterType.value === 'TOU') {
-                        let cost = 0; appliances.value.forEach(i => { if (!i.active) return; const w = getDeviceWattage(i); (i.slots||[]).forEach(h => { cost += (w/1000)*i.days*((h>=9 && h<22)?ratePeak.value:rateOff.value); }); });
+                        // 🚀 Holiday Logic Fixed: Weighted average for Peak hours
+                        let cost = 0; appliances.value.forEach(i => { if (!i.active) return; const w = getDeviceWattage(i); (i.slots||[]).forEach(h => { 
+                            const isPeakH = (h>=9 && h<22);
+                            const avgR = isPeakH ? ((ratePeak.value * 22) + (rateOff.value * 8)) / 30 : rateOff.value;
+                            cost += (w/1000) * i.days * avgR; 
+                        }); });
                         return (cost + (totalU*rateFT.value) + serviceFee.value)*1.07;
                     }
                     return calculateBill(totalU);
